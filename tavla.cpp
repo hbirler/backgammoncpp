@@ -26,7 +26,7 @@ tavla::~tavla()
 {
 }
 
-bool tavla::is_valid()
+bool tavla::is_valid()  const
 {
     int sum0 = 0, sum1 = 0;
     for (int i = 0; i < 26; i++)
@@ -46,7 +46,7 @@ bool tavla::is_valid()
     
     return true;
 }
-bool tavla::is_endgame(int s)
+bool tavla::is_endgame(int s)  const
 {
     int sum = 0;
     for (int i = 0; i < 7; i++)
@@ -58,18 +58,18 @@ bool tavla::is_endgame(int s)
     else
         return false;
 }
-bool tavla::is_hit(int s)
+bool tavla::is_hit(int s)  const
 {
     return checkers[s][25] != 0;
 }
-bool tavla::is_end()
+bool tavla::is_end()  const
 {
     if (checkers[0][0] == NUMCHECKERS || checkers[1][0] == NUMCHECKERS)
         return true;
     else
         return false;
 }
-int tavla::get_winner()
+int tavla::get_winner()  const
 {
     if (!is_end())
         return -1;
@@ -79,13 +79,77 @@ int tavla::get_winner()
         return BLACK;
     
 }
-std::string tavla::str()
+std::string tavla::str()  const
 {
+    using namespace std;
+    ostringstream os;
+    os << endl << hash<tavla>()(*this) << endl;
     
+    for (int i = 0; i < 13; i++)
+        os << "#";
+    os << "W" << checkers[0][0] << ":" << checkers[0][25] << " " <<
+          "B" << checkers[1][0] << ":" << checkers[1][25] << endl;
+    
+    
+    
+    for (int k = 1; ; k++)
+    {
+        bool tob = true;
+        
+        for (int i = 0; i < 12; i++)
+        {
+            if (i == 6)
+                os << "#";
+            if (checkers[0][13+i] >= k)
+            {
+                os << "W";
+                tob = false;
+            }
+            else if (checkers[1][12-i] >= k)
+            {
+                os << "B";
+                tob = false;
+            }
+            else
+                os << " ";
+        }
+        
+        os << endl;
+        if (tob)
+            break;
+    }
+    
+    int mmax = 0;
+    for (int i = 1; i <= 12; i++)
+    {
+        mmax = max(mmax, checkers[0][i]);
+        mmax = max(mmax, checkers[1][25-i]);
+    }
+    
+    for (int k = mmax; k > 0; k--)
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            if (i == 6)
+                os << "#";
+            if (checkers[0][12-i] >= k)
+                os << "W";
+            else if (checkers[1][13+i] >= k)
+                os << "B";
+            else
+                os << " ";
+        }
+        os << endl;
+    }
+    for (int i = 0; i < 13; i++)
+        os << "#";
+    os << ((turn == WHITE)?"W":"B");
+    os << endl;
+    return os.str();
 }
-void tavla::next_states(int d1, int d2, std::vector<tavla>& vec)
+void tavla::next_states(int d1, int d2, std::vector<tavla>& vec) const
 {
-    std::set<tavla> s0, s1;
+    std::unordered_set<tavla> s0, s1;
     if (d1 == d2)
     {
         this->next_die(d1, s0);
@@ -93,7 +157,7 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec)
         {
             if (s0.empty())
                 break;
-            for (tavla t:s0)
+            for (auto& t:s0)
                 t.next_die(d1, s1);
             swap(s0, s1);
             s1.clear();
@@ -102,13 +166,13 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec)
     else
     {
         this->next_die(d1, s0);
-        for (tavla t:s0)
+        for (auto& t:s0)
             t.next_die(d2, s1);
         swap(s0, s1);
         s1.clear();
         
         this->next_die(d2, s1);
-        for (tavla t:s1)
+        for (auto& t:s1)
             t.next_die(d1, s0);
         s1.clear();
     }
@@ -122,14 +186,15 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec)
     else
     {
         vec.clear();
-        for (tavla t:s0)
+        for (auto& t:s0)
         {
-            t.turn = 1-this->turn;
-            vec = std::vector<tavla>(s0.begin(), s0.end());
+            tavla nt(t);
+            nt.turn = 1-turn;
+            vec.push_back(nt);
         }
     }
 }
-void tavla::next_die(int die, std::set<tavla>& stav)
+void tavla::next_die(int die, std::unordered_set<tavla>& stav) const
 {
     if (is_end())
         return;
@@ -163,7 +228,7 @@ void tavla::next_die(int die, std::set<tavla>& stav)
             }
             else if (msum == 0)
             {
-                int ind = 0;
+                int ind = die;
                 while (ind != 0 && checkers[turn][ind] == 0)
                     ind--;
                 if (ind != 0)
@@ -190,11 +255,39 @@ void tavla::next_die(int die, std::set<tavla>& stav)
         }
     }
 }
-bool tavla::operator<(const tavla& rhs) const 
+bool tavla::operator<(const tavla& other) const 
 {
+    for (int i = 0; i < 26; i++)
+    {
+        if (this->checkers[i] < other.checkers[i])
+            return true;
+    }
+    if (this->turn < other.turn)
+        return true;
     
+    return false;
 }
-bool tavla::operator==(const tavla& rhs) const 
+bool tavla::operator==(const tavla& other) const 
 {
+    for (int i = 0; i < 26; i++)
+    {
+        if (this->checkers[i] != other.checkers[i])
+            return false;
+    }
+    if (this->turn != other.turn)
+        return false;
     
+    return true;
+}
+
+
+std::size_t std::hash<tavla>::operator()(const tavla& k) const
+{
+    std::size_t seed = 52;
+    for(int i = 0; i < 26; i++) {
+        seed ^= k.checkers[0][i] + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= k.checkers[1][i] + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    seed ^= k.turn + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    return seed;
 }
