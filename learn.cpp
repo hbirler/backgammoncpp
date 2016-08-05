@@ -2,13 +2,13 @@
 
 const int LRATE = 0.7;
 
-double evaluate(const tavla& t, const networkbase& net, int turn)
+double evaluate(const tavla& t, const networkbase& net, int turn, bool toto)
 {
-    if (t.is_end())
+    if (!toto && t.is_end())
     {
         //printf("KEKEKEKEK\n");
-        //if (t.get_winner() != turn)
-        //    printf("AYYYYLMAOOOO\n");
+        //if (t.get_winner() == turn)
+        //    printf("AYYYYLMAOOOO %d %d\n",t.get_winner(),turn);
         return t.get_winner() == turn;
     }
     
@@ -30,7 +30,7 @@ tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
     
     for (auto& t:vec)
     {
-        double nval = evaluate(t, net, 1-t.turn);
+        double nval = evaluate(t, net, tav.turn);
         if (nval > maxval)
             best = t;
     }
@@ -43,43 +43,77 @@ tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
     return best;
 }
 
-void update_net(const tavla& tav, double val, network& net, double lrate = LRATE)
+void update_net(const tavla& tav, double val, network& net, int turn = 0, double lrate = LRATE)
 {
     double input[INSIZE];
-    tav.to_vector(input);
+    tav.to_vector(input, turn);
     //printf("xx%d\n",net.nono);
     net.update(input, val);
 }
 
 void learn_game(network& net)
 {
+    network_random dumb;
     tavla tav;
     
-    tavla pret = tav;
-    bool first = true;
+    tavla prew;
+    tavla preb;
+    bool wfirst = true;
+    bool bfirst = true;
+    
     while (!tav.is_end())
     {
-        if (tav.turn == WHITE)
-        {
-            if (first)
-                first = false;
-            else
-            {
-                double res = evaluate(tav, net, WHITE);
-                update_net(pret, res, net);
-                //printf("%lf %lf\n",evaluate(tav, net, WHITE),evaluate(pret, net, WHITE));
-                pret = tav;
-            }
-        }
         int d1, d2;
         roll(&d1, &d2);
         
+        if (tav.turn == WHITE)
+        {
+            if (wfirst)
+                wfirst = false;
+            else
+            {
+                double res = evaluate(tav, net, tav.turn);
+                printf("%lf %lf\n",evaluate(prew, net, WHITE),evaluate(tav, net, WHITE));
+                update_net(prew, res, net);
+            }
+            prew = tav;
+        }
+        else
+        {
+            if (bfirst)
+                bfirst = false;
+            else
+            {
+                double res = evaluate(tav, net, tav.turn);
+                update_net(preb, res, net);
+            }
+            preb = tav;
+        }
+        
         tav = choose_next(tav, net, d1, d2);
     }
-    if (!first)
+    if (tav.turn == WHITE)
     {
-        //printf("%d\n",tav.get_winner());
-        update_net(pret, evaluate(tav, net, WHITE), net);
-        update_net(tav, evaluate(tav, net, WHITE), net);
+        if (wfirst)
+            wfirst = false;
+        else
+        {
+            double res = evaluate(tav, net, tav.turn);
+            update_net(prew, res, net);
+        }
+        prew = tav;
     }
+    else
+    {
+        if (bfirst)
+            bfirst = false;
+        else
+        {
+            double res = evaluate(tav, net, tav.turn);
+            update_net(preb, res, net);
+        }
+        preb = tav;
+    }
+    
+    
 }

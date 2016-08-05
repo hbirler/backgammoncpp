@@ -4,21 +4,25 @@ using namespace std;
 
 int main()
 {
+    srand(time(NULL));
     network net(0.01, 0.7, 5);
     tester test(&cout);
     
     
-    tavla tot;
+    /*tavla tot;
     double inp[INSIZE];
     tot.to_vector(inp);
     for (int i = 0; i<100;i++)
     {
-        net = network(1, 0.7, 5);
+        net = network(0.01, 0.7, 5);
         double out = net.evaluate(inp);
         printf("%lf\n", out);
     }
     int a;
     cin>>a;
+    
+    net = network(0.01, 0.7, 5);*/
+    
     //return 0;
     
     clock_t begin = clock();
