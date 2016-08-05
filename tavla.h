@@ -7,6 +7,9 @@
 #include <sstream>
 #include <cstdio>
 
+#ifndef NETWORKH
+const int INSIZE = 198;
+#endif
 
 enum side
 {
@@ -34,7 +37,7 @@ public:
     void next_die(int d1, std::unordered_set<tavla>& stav) const;
     bool operator<(const tavla& rhs) const ;
     bool operator==(const tavla& rhs) const ;
-    void to_vector(int output[198]);
+    void to_vector(int output[INSIZE], bool flip=false);
     int turn;
     int checkers[2][26] = {{0}, {0}};
 private:

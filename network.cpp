@@ -20,10 +20,18 @@ double randn()
     double u1 = fRand(); //these are uniform(0,1) random doubles
     double u2 = fRand();
     double randStdNormal = sqrt(-2.0 * log(u1)) *
-                sin(2.0 * M_PI * u2); //random normal(0,1)
+                sin(2.0 * PI * u2); //random normal(0,1)
     return randStdNormal;
 }
 
+double network_random::evaluate(double input[INSIZE])
+{
+    return fRand();
+}
+void network_random::update(double input[INSIZE], double output)
+{
+    return;
+}
 
 network::network(double eta, double decay)
 {

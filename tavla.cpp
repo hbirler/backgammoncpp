@@ -255,6 +255,29 @@ void tavla::next_die(int die, std::unordered_set<tavla>& stav) const
         }
     }
 }
+void tavla::to_vector(int output[INSIZE], bool flip) const
+{
+    for (int i = 0; i < INSIZE; i++)
+        output[i] = 0;
+    
+    for (int i = 0; i < 24; i++)
+    {
+        for (int k = 0; k < checkers[flip][i+1]; k++)
+        {
+            output[i*8 + k] = (k<3)?1:(checkers[flip][i+1]-3)/2;
+        }
+        for (int k = 0; k < checkers[!flip][i+1]; k++)
+        {
+            output[i*8 + 4 + k] = (k<3)?1:(checkers[!flip][i+1]-3)/2;
+        }
+    }
+    output[192] = checkers[flip][25] / 2;
+    output[193] = checkers[!flip][25] / 2;
+    output[194] = checkers[flip][0] / 15;
+    output[195] = checkers[!flip][0] / 15;
+    output[196] = tavla.turn == flip;
+    output[197] = tavla.turn == !flip;
+}
 bool tavla::operator<(const tavla& other) const 
 {
     for (int i = 0; i < 26; i++)
@@ -271,12 +294,13 @@ bool tavla::operator==(const tavla& other) const
 {
     for (int i = 0; i < 26; i++)
     {
-        if (this->checkers[i] != other.checkers[i])
+        if (this->checkers[0][i] != other.checkers[0][i])
+            return false;
+        if (this->checkers[1][i] != other.checkers[1][i])
             return false;
     }
     if (this->turn != other.turn)
         return false;
-    
     return true;
 }
 

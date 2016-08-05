@@ -4,14 +4,25 @@ using namespace std;
 
 int main()
 {
+    freopen("out.txt","w",stdout);
     int i = 5;
-    tavla t;
-    cout<<t.str()<<endl;
+    tavla mytav;
+    cout<<mytav.str()<<endl;
     cout<<"Success"<<endl;
     
+    vector<tavla> vs;
+    mytav.next_states(2,3, vs);
     
-    int lol;
-    cin>>lol;
+    cout<<vs.size()<<endl;
+    
+    for(auto& t: vs)
+    {
+        cout<<t.str()<<endl;
+    }
+    
+    
+    //int qwer;
+    //cin>>qwer;
     
     return 0;
 }
