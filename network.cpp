@@ -93,10 +93,10 @@ void network::update(double input[INSIZE], double output)
     //double* nabla_b[2], nabla_w[2];
     double nabla_b0[HIDSIZE];
     double nabla_b1 = 0.0;
-    double nabla_w0[192][HIDSIZE];
+    double nabla_w0[INSIZE][HIDSIZE];
     double nabla_w1[HIDSIZE];
     
-    backprop(input, 0.0, nabla_b0, &nabla_b1, nabla_w0, nabla_w1);
+    backprop(input, nabla_b0, &nabla_b1, nabla_w0, nabla_w1);
     
     
     e_b1 = decay * e_b1 + nabla_b1;
@@ -131,7 +131,33 @@ void network::update(double input[INSIZE], double output)
      }
     
 }
-void network::backprop(double input[INSIZE], double output, double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double* nabla_w1)
+void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE])
 {
+    double outerror = 0.0;
+    double hiderror[HIDSIZE];
     
+    double hidz[HIDSIZE];
+    double outz = 0.0;
+    double output = evaluate(input, hidz, &outz);
+    double hidden[HIDSIZE];
+    
+    for (int i = 0; i < HIDSIZE; i++)
+        hidden[i] = sigmoid(hidz[i]);
+    
+    outerror = sigmoid_prime(outz);
+    for (int i = 0; i < HIDSIZE; i++)
+    {
+        hiderror[i] = weights1[i] * outerror * sigmoid_prime(hidz[i]);
+    }
+    
+    *nabla_b1 = outerror;
+    for (int j = 0; j < HIDSIZE; j++)
+        nabla_b0[j] = hiderror[j];
+        
+    for (int k = 0; k < HIDSIZE; k++)
+        nabla_w1[k] = hidden[k] * outerror;
+    
+    for (int k = 0; k < INSIZE; k++)
+     for (int j = 0; j < HIDSIZE; j++)
+        nabla_w0[k][j] = input[k] * hiderror[j];
 }
