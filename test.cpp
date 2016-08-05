@@ -12,7 +12,7 @@ tester::tester()
     this->log = false;
 }
 
-tester::tester(char* logdir, bool log = true)
+tester::tester(char* logdir, bool log)
 {
     this->log = log;
     this->logdir = logdir;
@@ -20,6 +20,7 @@ tester::tester(char* logdir, bool log = true)
 
 tester::~tester()
 {
+    
 }
 
 int tester::test_game(networkbase& w, networkbase& b)

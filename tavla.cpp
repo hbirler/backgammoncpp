@@ -1,5 +1,17 @@
 #include "tavla.h"
 
+int randint(int min, int max)
+{
+    return min + (rand() % (max - min + 1));
+}
+
+void roll(int* d1, int* d2)
+{
+    *d1 = randint(1,6);
+    *d2 = randint(1,6);
+}
+
+
 tavla::tavla()
 {
     for (int i = 0; i < 2; i++)
@@ -255,7 +267,7 @@ void tavla::next_die(int die, std::unordered_set<tavla>& stav) const
         }
     }
 }
-void tavla::to_vector(int output[INSIZE], bool flip) const
+void tavla::to_vector(double output[INSIZE], bool flip) const
 {
     for (int i = 0; i < INSIZE; i++)
         output[i] = 0;
@@ -275,8 +287,8 @@ void tavla::to_vector(int output[INSIZE], bool flip) const
     output[193] = checkers[!flip][25] / 2;
     output[194] = checkers[flip][0] / 15;
     output[195] = checkers[!flip][0] / 15;
-    output[196] = tavla.turn == flip;
-    output[197] = tavla.turn == !flip;
+    output[196] = turn == flip;
+    output[197] = turn == !flip;
 }
 bool tavla::operator<(const tavla& other) const 
 {

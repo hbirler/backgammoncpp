@@ -1,3 +1,6 @@
+#ifndef TAVLAH
+#define TAVLAH
+
 #include <string>
 #include <set>
 #include <unordered_set>
@@ -7,7 +10,8 @@
 #include <sstream>
 #include <cstdio>
 
-#ifndef NETWORKH
+#ifndef _INSIZE
+#define _INSIZE
 const int INSIZE = 198;
 #endif
 
@@ -37,7 +41,7 @@ public:
     void next_die(int d1, std::unordered_set<tavla>& stav) const;
     bool operator<(const tavla& rhs) const ;
     bool operator==(const tavla& rhs) const ;
-    void to_vector(int output[INSIZE], bool flip=false);
+    void to_vector(double output[INSIZE], bool flip=false) const;
     int turn;
     int checkers[2][26] = {{0}, {0}};
 private:
@@ -53,3 +57,6 @@ namespace std {
     };
 }
 
+
+
+#endif

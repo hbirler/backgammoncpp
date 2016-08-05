@@ -1,4 +1,10 @@
+#ifndef TESTH
+#define TESTH
+
+
 #include "network.h"
+#include "learn.h"
+#include "tavla.h"
 
 struct test_result
 {
@@ -22,3 +28,4 @@ private:
     char* logdir;
 };
 
+#endif

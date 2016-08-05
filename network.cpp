@@ -24,7 +24,7 @@ double randn()
     return randStdNormal;
 }
 
-double network_random::evaluate(double input[INSIZE])
+double network_random::evaluate(double input[INSIZE]) const
 {
     return fRand();
 }
@@ -73,13 +73,13 @@ network::~network()
     delete this->e_w0;
     delete this->e_w1;*/
 }
-double network::evaluate(double input[INSIZE])
+double network::evaluate(double input[INSIZE]) const
 {
     double hidz[HIDSIZE];// = {0.0}
     double outz = 0.0;
     return evaluate(input, hidz, &outz);
 }
-double network::evaluate(double input[INSIZE], double hidz[HIDSIZE], double* outz)
+double network::evaluate(double input[INSIZE], double hidz[HIDSIZE], double* outz) const
 {
     double hidden[HIDSIZE] = {0.0};
     double output = 0.0;

@@ -4,25 +4,17 @@ using namespace std;
 
 int main()
 {
-    freopen("out.txt","w",stdout);
-    int i = 5;
-    tavla mytav;
-    cout<<mytav.str()<<endl;
-    cout<<"Success"<<endl;
+    network net;
     
-    vector<tavla> vs;
-    mytav.next_states(2,3, vs);
-    
-    cout<<vs.size()<<endl;
-    
-    for(auto& t: vs)
+    for(int ind = 0; ; ind++)
     {
-        cout<<t.str()<<endl;
+        learn_game(net);
+        cout<<ind<<endl;
     }
     
     
-    //int qwer;
-    //cin>>qwer;
+    int qwer;
+    cin>>qwer;
     
     return 0;
 }
