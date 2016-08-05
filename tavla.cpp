@@ -209,7 +209,11 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec) const
 void tavla::next_die(int die, std::unordered_set<tavla>& stav) const
 {
     if (is_end())
+    {
+        tavla nval(*this);
+        stav.insert(nval);
         return;
+    }
     if (is_hit(turn))
     {
         if (checkers[1-turn][die] > 1)

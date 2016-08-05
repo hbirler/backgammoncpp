@@ -5,6 +5,8 @@
 #include "network.h"
 #include "learn.h"
 #include "tavla.h"
+#include <iostream>
+#include <iomanip>
 
 struct test_result
 {
@@ -18,14 +20,14 @@ class tester
 {
 public:
     tester();
-    tester(char* logdir, bool log = true);
+    tester(std::ostream* os, bool tolog = true);
     ~tester();
-    int test_game(networkbase& w, networkbase& b);
-    test_result test_network(networkbase& net, int num);
-    test_result test_network(networkbase& net, int numw, int numb);
+    int test_game(const networkbase& w, const networkbase& b);
+    test_result test_network(const networkbase& net, int numw, int numb, int netno=-1);
+    void log(const test_result& result, int netno=-1);
 private:
-    bool log;
-    char* logdir;
+    bool tolog;
+    std::ostream* out;
 };
 
 #endif

@@ -5,7 +5,12 @@ const int LRATE = 0.7;
 double evaluate(const tavla& t, const networkbase& net, int turn)
 {
     if (t.is_end())
+    {
+        //printf("KEKEKEKEK\n");
+        //if (t.get_winner() != turn)
+        //    printf("AYYYYLMAOOOO\n");
         return t.get_winner() == turn;
+    }
     
     double output[INSIZE];
     t.to_vector(output, turn);
@@ -15,7 +20,7 @@ double evaluate(const tavla& t, const networkbase& net, int turn)
     return out;
 }
 
-tavla choose_next(tavla tav, networkbase& net, int d1, int d2)
+tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
 {
     std::vector<tavla> vec;
     tav.next_states(d1, d2, vec);
@@ -31,33 +36,39 @@ tavla choose_next(tavla tav, networkbase& net, int d1, int d2)
     }
     
     if (maxval < -1)
+    {
         return tav;
+    }
     
     return best;
 }
 
-void update_net(const tavla& tav, double val, networkbase& net, double lrate = LRATE)
+void update_net(const tavla& tav, double val, network& net, double lrate = LRATE)
 {
     double input[INSIZE];
     tav.to_vector(input);
+    //printf("xx%d\n",net.nono);
     net.update(input, val);
 }
 
-void learn_game(networkbase& net)
+void learn_game(network& net)
 {
     tavla tav;
     
-    const tavla& pret = tav;
+    tavla pret = tav;
     bool first = true;
     while (!tav.is_end())
     {
         if (tav.turn == WHITE)
         {
-            if (!first)
+            if (first)
                 first = false;
             else
             {
-                update_net(pret, evaluate(tav, net, WHITE), net);
+                double res = evaluate(tav, net, WHITE);
+                update_net(pret, res, net);
+                //printf("%lf %lf\n",evaluate(tav, net, WHITE),evaluate(pret, net, WHITE));
+                pret = tav;
             }
         }
         int d1, d2;
@@ -66,5 +77,9 @@ void learn_game(networkbase& net)
         tav = choose_next(tav, net, d1, d2);
     }
     if (!first)
+    {
+        //printf("%d\n",tav.get_winner());
         update_net(pret, evaluate(tav, net, WHITE), net);
+        update_net(tav, evaluate(tav, net, WHITE), net);
+    }
 }
