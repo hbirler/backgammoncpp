@@ -10,9 +10,18 @@ double sigmoid_prime(double z)
     return sigmoid(z)*(1-sigmoid(z));
 }
 
+double fRand()
+{
+    return (double)rand() / RAND_MAX;
+}
+
 double randn()
 {
-    return 0;
+    double u1 = fRand(); //these are uniform(0,1) random doubles
+    double u2 = fRand();
+    double randStdNormal = sqrt(-2.0 * log(u1)) *
+                sin(2.0 * M_PI * u2); //random normal(0,1)
+    return randStdNormal;
 }
 
 

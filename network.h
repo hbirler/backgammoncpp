@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdlib>
 
 const int INSIZE = 198;
 const int HIDSIZE = 50;
