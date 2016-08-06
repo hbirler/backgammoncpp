@@ -5,8 +5,24 @@ using namespace std;
 int main()
 {
     srand(time(NULL));
-    network net(0.01, 0.7, 5);
+    network net(0.01, 0, 5);
     tester test(&cout);
+    
+    /*tavla tot;
+    double inp[INSIZE];
+    tot.to_vector(inp);
+    network noto(0.01, 0.7, 5);
+    for (int i = 0; ;i++)
+    {
+        noto.update(inp, 0.33);
+        if (i % 100 == 0)
+        {
+            double out = noto.evaluate(inp);
+            printf("%lf\n", out);
+        }
+    }
+    int a;
+    cin>>a;*/
     
     
     /*tavla tot;
@@ -32,9 +48,9 @@ int main()
         if (ind % 100 == 0)
         {
             clock_t end = clock();
-            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+            int elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
             
-            cout<<ind<<" "<<setprecision(2)<<elapsed_secs<<endl;
+            cout<<ind<<" "<<elapsed_secs<<endl;
             
             test.test_network(net, 50, 50, ind);
         }

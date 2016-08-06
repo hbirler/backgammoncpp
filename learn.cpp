@@ -73,8 +73,9 @@ void learn_game(network& net)
             else
             {
                 double res = evaluate(tav, net, tav.turn);
-                printf("%lf %lf\n",evaluate(prew, net, WHITE),evaluate(tav, net, WHITE));
-                update_net(prew, res, net);
+                if (rand() % 1000 == 0)
+                    printf("%lf %lf\n",evaluate(prew, net, WHITE),evaluate(tav, net, WHITE));
+                update_net(prew, res, net,WHITE);
             }
             prew = tav;
         }
@@ -85,35 +86,19 @@ void learn_game(network& net)
             else
             {
                 double res = evaluate(tav, net, tav.turn);
-                update_net(preb, res, net);
+                update_net(preb, res, net,BLACK);
             }
             preb = tav;
         }
         
         tav = choose_next(tav, net, d1, d2);
     }
-    if (tav.turn == WHITE)
-    {
-        if (wfirst)
-            wfirst = false;
-        else
-        {
-            double res = evaluate(tav, net, tav.turn);
-            update_net(prew, res, net);
-        }
-        prew = tav;
-    }
-    else
-    {
-        if (bfirst)
-            bfirst = false;
-        else
-        {
-            double res = evaluate(tav, net, tav.turn);
-            update_net(preb, res, net);
-        }
-        preb = tav;
-    }
+    double resw = evaluate(tav, net, WHITE);
+    update_net(prew, resw, net,WHITE);
+    double resb = evaluate(tav, net, BLACK);
+    update_net(preb, resb, net,BLACK);
+    if (rand() % 100 ==0)
+       printf("\t%lf %lf\n",resw,resb);
     
     
 }

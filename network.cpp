@@ -143,7 +143,7 @@ void network::update(double input[INSIZE], double output)
     //done decay
     
     double prediction = this->evaluate(input);
-    double gamma = -(output - prediction);
+    double gamma = (output - prediction);
     
     //printf("xx%lf\n",gamma);
     
@@ -175,7 +175,7 @@ void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* n
     for (int i = 0; i < HIDSIZE; i++)
         hidden[i] = sigmoid(hidz[i]);
     
-    outerror = sigmoid_prime(outz);
+    outerror = -output * sigmoid_prime(outz);
     for (int i = 0; i < HIDSIZE; i++)
     {
         hiderror[i] = weights1[i] * outerror * sigmoid_prime(hidz[i]);
