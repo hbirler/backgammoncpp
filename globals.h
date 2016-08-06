@@ -5,4 +5,6 @@
 #include <iostream>
 #include <cstdlib>
 
+#define NOMINMAX
+
 #endif

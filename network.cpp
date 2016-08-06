@@ -35,19 +35,10 @@ void network_random::update(double input[INSIZE], double output)
 
 network::network(double eta, double decay, int nono)
 {
-    /*this->eta = eta;
-    this->decay = decay;
-    this->biases0 = new double[HIDSIZE];
-    this->biases1 = new double[1];
-    this->weights0 = new double[INSIZE][HIDSIZE];
-    this->weights1 = new double[HIDSIZE];
-    this->e_b0 = new double[HIDSIZE];
-    this->e_b1 = new double[1];
-    this->e_w0 = new double[INSIZE][HIDSIZE];
-    this->e_w1 = new double[HIDSIZE];*/
     this->nono = nono;
     this->eta = eta;
     this->decay = decay;
+    
     biases1 = randn();
     e_b1 = 0;
     for (int i = 0; i < HIDSIZE; i++)
@@ -66,17 +57,8 @@ network::network(double eta, double decay, int nono)
 }
 network::~network()
 {
-    
     this->eta = 0.01;
     this->decay = 0.7;
-    /*delete this->biases0;
-    delete this->biases1;
-    delete this->weights0;
-    delete this->weights1;
-    delete this->e_b0;
-    delete this->e_b1;
-    delete this->e_w0;
-    delete this->e_w1;*/
 }
 double network::evaluate(double input[INSIZE]) const
 {
@@ -133,19 +115,13 @@ void network::update(double input[INSIZE], double output)
      for (int i = 0; i < HIDSIZE; i++)
      {
          e_w0[k][i] = decay * e_w0[k][i] + nabla_w0[k][i];
-         //printf("%lf\n", nabla_w0[k][i]);
-         
-         //if (nabla_w0[k][i] != 0)
-         //   printf("%lf\n", nabla_w0[k][i]);
      }
     
     
     //done decay
     
     double prediction = this->evaluate(input);
-    double gamma = (output - prediction);
-    
-    //printf("xx%lf\n",gamma);
+    double gamma = -(output - prediction);
     
     biases1 = biases1 - eta * gamma * e_b1;
     for (int i = 0; i < HIDSIZE; i++)
@@ -175,11 +151,10 @@ void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* n
     for (int i = 0; i < HIDSIZE; i++)
         hidden[i] = sigmoid(hidz[i]);
     
-    outerror = -output * sigmoid_prime(outz);
+    outerror = output * sigmoid_prime(outz);
     for (int i = 0; i < HIDSIZE; i++)
     {
         hiderror[i] = weights1[i] * outerror * sigmoid_prime(hidz[i]);
-        //printf("%lf\n",hiderror[i]);
     }
     
     *nabla_b1 = outerror;

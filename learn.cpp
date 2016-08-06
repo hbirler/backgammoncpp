@@ -32,18 +32,16 @@ tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
     {
         double nval = evaluate(t, net, tav.turn);
         if (nval > maxval)
+        {
             best = t;
-    }
-    
-    if (maxval < -1)
-    {
-        return tav;
+            maxval = nval;
+        }
     }
     
     return best;
 }
 
-void update_net(const tavla& tav, double val, network& net, int turn = 0, double lrate = LRATE)
+void update_net(const tavla& tav, double val, network& net, int turn = 0)
 {
     double input[INSIZE];
     tav.to_vector(input, turn);
@@ -73,8 +71,8 @@ void learn_game(network& net)
             else
             {
                 double res = evaluate(tav, net, tav.turn);
-                if (rand() % 1000 == 0)
-                    printf("%lf %lf\n",evaluate(prew, net, WHITE),evaluate(tav, net, WHITE));
+                //if (rand() % 1000 == 0)
+                //    printf("%lf %lf\n",evaluate(prew, net, WHITE),evaluate(tav, net, WHITE));
                 update_net(prew, res, net,WHITE);
             }
             prew = tav;
@@ -97,8 +95,8 @@ void learn_game(network& net)
     update_net(prew, resw, net,WHITE);
     double resb = evaluate(tav, net, BLACK);
     update_net(preb, resb, net,BLACK);
-    if (rand() % 100 ==0)
-       printf("\t%lf %lf\n",resw,resb);
+    //if (rand() % 100 ==0)
+    //   printf("\t%lf %lf\n",resw,resb);
     
     
 }

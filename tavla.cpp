@@ -280,12 +280,15 @@ void tavla::to_vector(double output[INSIZE], bool flip) const
     {
         for (int k = 0; k < checkers[flip][i+1]; k++)
         {
+            //printf("%d\n",checkers[flip][i+1]);
             output[i*8 + k] = (k<3)?1:(checkers[flip][i+1]-3)/2;
+            //printf("%lf\n",output[i*8 + k]);
         }
         for (int k = 0; k < checkers[!flip][i+1]; k++)
         {
             output[i*8 + 4 + k] = (k<3)?1:(checkers[!flip][i+1]-3)/2;
         }
+        
     }
     output[192] = checkers[flip][25] / 2;
     output[193] = checkers[!flip][25] / 2;

@@ -5,14 +5,14 @@ using namespace std;
 int main()
 {
     srand(time(NULL));
-    network net(0.01, 0, 5);
+    network net(0.01, 0.7, 5);
     tester test(&cout);
     
     /*tavla tot;
     double inp[INSIZE];
     tot.to_vector(inp);
     network noto(0.01, 0.7, 5);
-    for (int i = 0; ;i++)
+    for (int i = 0; i < 10000;i++)
     {
         noto.update(inp, 0.33);
         if (i % 100 == 0)
@@ -45,15 +45,20 @@ int main()
     for(int ind = 0;  ; ind++)
     {
         learn_game(net);
-        if (ind % 100 == 0)
+		
+        if (ind % 1000 == 0)
         {
             clock_t end = clock();
-            int elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+			int elapsed_secs = 0;// double(end - begin) / CLOCKS_PER_SEC;
             
             cout<<ind<<" "<<elapsed_secs<<endl;
-            
+			cout << "Testing network..." << endl;
             test.test_network(net, 50, 50, ind);
         }
+		else if (ind % 100 == 0)
+		{
+			cout << ind << endl;
+		}
     }
     
     

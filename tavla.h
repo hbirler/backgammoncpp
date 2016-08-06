@@ -9,6 +9,7 @@
 #include <utility>
 #include <sstream>
 #include <cstdio>
+#include <algorithm>
 
 #ifndef _INSIZE
 #define _INSIZE
