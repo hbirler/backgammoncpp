@@ -30,7 +30,7 @@ void serialize(const std::string& path, T const& val)
 	union_bytes<T> mynet;
 	mynet.val = val;
 
-	ofstream outputBuffer(path, ios::out | ios::binary);
+	ofstream outputBuffer(path, ios::out | ios::binary | ios::trunc);
 
 	outputBuffer.write(mynet.bytes, sizeof(mynet.bytes));
 

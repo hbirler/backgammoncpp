@@ -11,7 +11,9 @@ int main()
 {
     srand(time(NULL));
     network net(0.1, 0.7);
-    tester test(&cout);
+	ofstream testout;
+	testout.open("./testout.txt", ios::out | ios::app);
+    tester test(&testout);
     
     /*tavla tot;
     double inp[INSIZE];

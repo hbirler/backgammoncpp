@@ -44,6 +44,13 @@ void tester::log(const test_result& result, int netno)
     }
     *(this->out) << std::setprecision(2) << result.white << " " << result.black << "\t" << result.avg;
     *(this->out) << std::endl;
+    std::cout << "Test Result: ";
+    if (netno > 0)
+    {
+        std::cout << "#" << netno << " ";
+    }
+    std::cout << std::setprecision(2) << result.white << " " << result.black << "\t" << result.avg;
+    std::cout << std::endl; 
 }
 
 test_result tester::test_network(const networkbase& net, int numw, int numb, int netno)

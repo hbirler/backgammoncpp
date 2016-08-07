@@ -1,28 +1,37 @@
-all: tavlacpp
+IDIR =./include
+CC=g++
+CFLAGS= -std=c++11 -O2 -I$(IDIR)
 
-tavlacpp: main.o test.o learn.o network.o tavla.o serialize.o myrandom.o
-	g++ -std=c++11 main.o test.o learn.o network.o tavla.o serialize.o myrandom.o -o tavla
+ODIR=obj
+LDIR =./lib
 
-test.o: test.cpp
-	g++ -std=c++11 -O2 -c test.cpp
+LIBS=-lm
 
-main.o: main.cpp
-	g++ -std=c++11 -O2 -c main.cpp
+_MODS = main learn myrandom network serialize tavla test
 
-learn.o: learn.cpp
-	g++ -std=c++11 -O2 -c learn.cpp
+_DEPS = $(patsubst %,%.h,$(_MODS)) globals.h
+DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-network.o: network.cpp
-	g++ -std=c++11 -O2 -c network.cpp
+_OBJ = $(patsubst %,%.o,$(_MODS))
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+OUT_DIR = obj include nets
 
-tavla.o: tavla.cpp
-	g++ -std=c++11 -O2 -c tavla.cpp
+MKDIR_P = mkdir -p
+.PHONY: directories
 
-serialize.o: serialize.cpp
-	g++ -std=c++11 -O2 -c serialize.cpp
-	
-myrandom.o: myrandom.cpp
-	g++ -std=c++11 -O2 -c myrandom.cpp
+all: directories tavla
+
+directories: ${OUT_DIR}
+
+${OUT_DIR}:
+	${MKDIR_P} ${OUT_DIR}
+
+$(ODIR)/%.o: %.cpp $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+tavla: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+.PHONY: clean
 
 clean:
-	rm *o tavlacpp
