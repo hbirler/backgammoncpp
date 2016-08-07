@@ -1,37 +1,51 @@
-IDIR =./include
-CC=g++
-CFLAGS= -std=c++11 -O2 -I$(IDIR)
+# TODO: 
+#
+ 
+CC := g++ # This is the main compiler
+# CC := clang --analyze # and comment out the linker last line for sanity
+SRCDIR := src
+BUILDDIR := build
+TARGETDIR := bin
+TARGET := $(TARGETDIR)/tavla
+INCDIR := include
 
-ODIR=obj
-LDIR =./lib
+REQDIRS := output
+ 
+SRCEXT := cpp
+INCEXT := h
+SOURCES := $(wildcard $(SRCDIR)/*.$(SRCEXT))
+HEADERS := $(wildcard $(INCDIR)/*.$(INCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+CFLAGS := -std=c++11 -g -O2 # -Wall
+LIB := # 
+INC := -I include
 
-LIBS=-lm
+all: $(TARGET) directories
 
-_MODS = main learn myrandom network serialize tavla test
+$(TARGET): $(OBJECTS)
+	@echo " Linking..."
+	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
-_DEPS = $(patsubst %,%.h,$(_MODS)) globals.h
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT) $(HEADERS)
+	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(TARGETDIR)
+	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
-_OBJ = $(patsubst %,%.o,$(_MODS))
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
-OUT_DIR = obj include nets
+directories: $(REQDIRS)
 
-MKDIR_P = mkdir -p
-.PHONY: directories
-
-all: directories tavla
-
-directories: ${OUT_DIR}
-
-${OUT_DIR}:
-	${MKDIR_P} ${OUT_DIR}
-
-$(ODIR)/%.o: %.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-tavla: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
-
-.PHONY: clean
+$(REQDIRS):
+	@mkdir -p $(REQDIRS)
 
 clean:
+	@echo " Cleaning..."; 
+	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+
+# Tests
+tester:
+	$(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
+
+# Spikes
+ticket:
+	$(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
+
+.PHONY: clean directories

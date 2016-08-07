@@ -1,0 +1,16 @@
+# Ignore application output
+output/*
+
+# Ignore vscode
+.vscode
+
+# Ignore the build and lib dirs
+build/*
+lib/*
+obj/*
+
+# Ignore any executables
+bin/*
+
+# Ignore Mac specific files
+.DS_Store

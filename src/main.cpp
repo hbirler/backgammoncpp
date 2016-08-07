@@ -12,7 +12,7 @@ int main()
     srand(time(NULL));
     network net(0.1, 0.7);
 	ofstream testout;
-	testout.open("./testout.txt", ios::out | ios::app);
+	testout.open("./output/testout.txt", ios::out | ios::app);
     tester test(&testout);
     
     /*tavla tot;
@@ -50,7 +50,7 @@ int main()
 
 	int ind = 0;
 
-	string netpath = "./nets/network.bin";
+	string netpath = "./output/network.bin";
 
 	if (file_exists(netpath))
 	{
