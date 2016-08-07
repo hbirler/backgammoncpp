@@ -40,6 +40,11 @@ clean:
 	@echo " Cleaning..."; 
 	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
+cleanout:
+	@echo " Cleaning..."; 
+	@echo " $(RM) -r $(REQDIRS)"; $(RM) -r $(REQDIRS)
+	@mkdir -p $(REQDIRS)
+
 # Tests
 tester:
 	$(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester

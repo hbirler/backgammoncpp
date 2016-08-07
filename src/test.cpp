@@ -37,18 +37,17 @@ int tester::test_game(const networkbase& w, const networkbase& b)
 
 void tester::log(const test_result& result, int netno)
 {
+    *(this->out) << std::fixed << std::setprecision(2);
     *(this->out) << "Test Result: ";
     if (netno > 0)
-    {
         *(this->out) << "#" << netno << " ";
-    }
     *(this->out) << std::setprecision(2) << result.white << " " << result.black << "\t" << result.avg;
     *(this->out) << std::endl;
-    std::cout << "Test Result: ";
+    
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\t-Test Result: ";
     if (netno > 0)
-    {
         std::cout << "#" << netno << " ";
-    }
     std::cout << std::setprecision(2) << result.white << " " << result.black << "\t" << result.avg;
     std::cout << std::endl; 
 }

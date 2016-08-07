@@ -2,12 +2,12 @@
 
 
 
-double sigmoid(double z)
+inline double sigmoid(double z)
 {
     return 1.0/(1.0+exp(-z));
 }
 
-double sigmoid_prime(double z)
+inline double sigmoid_prime(double z)
 {
     return sigmoid(z)*(1-sigmoid(z));
 }
@@ -23,11 +23,11 @@ double sigmoid_prime(double z)
     return randStdNormal;
 }*/
 
-double network_random::evaluate(double input[INSIZE]) const
+inline double network_random::evaluate(double input[INSIZE]) const
 {
     return randf();
 }
-void network_random::update(double input[INSIZE], double output)
+inline void network_random::update(double input[INSIZE], double output)
 {
     return;
 }

@@ -25,22 +25,37 @@ tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
     std::vector<tavla> vec;
     tav.next_states(d1, d2, vec);
     
-    tavla best = tav;
+    int bestind = 0;
     double maxval = tav.turn==BLACK?INFINITY:-1.0;
 
     
-    for (auto& t:vec)
+    for (int i = 0; i < vec.size(); i++)
     {
-        double nval = evaluate(t, net, tav.turn);
+        double nval = evaluate(vec[i], net, WHITE);
         if (((tav.turn == WHITE) && (nval > maxval)) || ((tav.turn == BLACK) && (nval < maxval)))
         {
-            best = t;
+            bestind = i;
             maxval = nval;
         }
     }
     
-    return best;
+    return vec[bestind];
 }
+
+/*tavla choose_next_depr(tavla tav, const networkbase& net, int d1, int d2)
+{
+    std::vector<tavla> vec;
+    tavla retval = tav.next_best_state(d1, d2, vec, [](const tavla& tav)->double {
+        double eval = evaluate(tav, net, WHITE);
+        if (tav.turn == 0)
+            return eval;
+        else
+            return 1-eval;
+    });
+    
+    
+    return retval;
+}*/
 
 void update_net(const tavla& tav, double val, network& net, int turn = 0)
 {

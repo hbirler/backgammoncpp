@@ -59,27 +59,29 @@ int main()
 		cout << "Loaded network... #" << ind << endl;
 	}
     
+    cout << std::fixed << std::setprecision(2);
+    
     clock_t begin = clock();
     for (ind;  ; ind++)
     {
 		net.no = ind;
-        if (ind % 1000 == 0)
+        
+        if (ind % 100 == 0)
         {
             clock_t end = clock();
-			int elapsed_secs = 0;// double(end - begin) / CLOCKS_PER_SEC;
-            
-			cout << ind << " " << elapsed_secs << endl;
-			cout << "Testing network..." << endl;
+			double elapsed_secs = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << setw(8) << left << ind << " " << elapsed_secs << endl;
+        }
+        
+        if (ind % 1000 == 0)
+        {
+			cout << "\tTesting network..." << endl;
             test.test_network(net, 50, 50, ind);
 			
-			cout << "Saving network..." << endl;
+			cout << "\tSaving network...";
 			serialize<network>(netpath, net);
-			cout << "Saved" << endl;
+			cout << " Saved" << endl;
         }
-		else if (ind % 100 == 0)
-		{
-			cout << ind << endl;
-		}
 
 
 		learn_game(net);
