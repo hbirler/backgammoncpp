@@ -26,13 +26,13 @@ tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
     tav.next_states(d1, d2, vec);
     
     int bestind = 0;
-    double maxval = tav.turn==BLACK?INFINITY:-1.0;
+    double maxval =-1.0;
 
     
     for (int i = 0; i < vec.size(); i++)
     {
-        double nval = evaluate(vec[i], net, WHITE);
-        if (((tav.turn == WHITE) && (nval > maxval)) || ((tav.turn == BLACK) && (nval < maxval)))
+        double nval = evaluate(vec[i], net, tav.turn);
+        if (nval > maxval)
         {
             bestind = i;
             maxval = nval;

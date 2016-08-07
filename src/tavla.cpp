@@ -22,11 +22,12 @@ tavla::tavla()
 
 tavla::tavla(const tavla& other)
 {
-    for (int i = 0; i < 2; i++)
+    /*for (int i = 0; i < 2; i++)
      for (int k = 0; k < 26; k++)
      {
          this->checkers[i][k] = other.checkers[i][k];
-     }
+     }*/
+    std::memcpy(this->checkers, other.checkers, sizeof(this->checkers));
     this->turn = other.turn;
 }
 
@@ -127,7 +128,7 @@ std::string tavla::str()  const
             break;
     }
     
-    int mmax = 0;
+    char mmax = 0;
     for (int i = 1; i <= 12; i++)
     {
         mmax = max(mmax, checkers[0][i]);
@@ -270,26 +271,26 @@ void tavla::next_die(int die, std::unordered_set<tavla>& stav) const
 void tavla::to_vector(double output[INSIZE], bool flip) const
 {
     for (int i = 0; i < INSIZE; i++)
-        output[i] = 0;
+        output[i] = 0.0;
     
     for (int i = 0; i < 24; i++)
     {
         for (int k = 0; k < checkers[flip][i+1]; k++)
         {
             //printf("%d\n",checkers[flip][i+1]);
-            output[i*8 + k] = (k<3)?1:(checkers[flip][i+1]-3)/2;
+            output[i*8 + k] = (k<3)?1.0:(checkers[flip][i+1]-3)/2.0;
             //printf("%lf\n",output[i*8 + k]);
         }
         for (int k = 0; k < checkers[!flip][i+1]; k++)
         {
-            output[i*8 + 4 + k] = (k<3)?1:(checkers[!flip][i+1]-3)/2;
+            output[i*8 + 4 + k] = (k<3)?1.0:(checkers[!flip][i+1]-3)/2.0;
         }
         
     }
-    output[192] = checkers[flip][25] / 2;
-    output[193] = checkers[!flip][25] / 2;
-    output[194] = checkers[flip][0] / 15;
-    output[195] = checkers[!flip][0] / 15;
+    output[192] = checkers[flip][25] / 2.0;
+    output[193] = checkers[!flip][25] / 2.0;
+    output[194] = checkers[flip][0] / 15.0;
+    output[195] = checkers[!flip][0] / 15.0;
     output[196] = turn == flip;
     output[197] = turn == !flip;
 }
@@ -323,9 +324,13 @@ bool tavla::operator==(const tavla& other) const
 std::size_t std::hash<tavla>::operator()(const tavla& k) const
 {
     std::size_t seed = 52;
-    for(int i = 0; i < 26; i++) {
-        seed ^= k.checkers[0][i] + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        seed ^= k.checkers[1][i] + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    /*for(int i = 0; i < 26; i++) {
+        seed ^= (std::size_t)k.checkers[0][i] + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= (std::size_t)k.checkers[1][i] + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }*/
+    const int *mptr = (const int*)&k.checkers[0][0];
+    for(int i = 0; i < 52/sizeof(int); i++) {
+        seed ^= mptr[i] + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
     seed ^= k.turn + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     return seed;

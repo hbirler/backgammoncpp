@@ -9,7 +9,6 @@ inline bool file_exists(const std::string& name) {
 
 int main()
 {
-    srand(time(NULL));
     network net(0.1, 0.7);
 	ofstream testout;
 	testout.open("./output/testout.txt", ios::out | ios::app);

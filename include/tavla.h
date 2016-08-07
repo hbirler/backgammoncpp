@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <vector>
 #include <cmath>
+#include <cstring>
 #include <utility>
 #include <sstream>
 #include <cstdio>
@@ -46,7 +47,7 @@ public:
     bool operator==(const tavla& rhs) const ;
     void to_vector(double output[INSIZE], bool flip=false) const;
     int turn;
-    int checkers[2][26] = {{0}, {0}};
+    char checkers[2][26] = {{0}, {0}};
 private:
     
 };
