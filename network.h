@@ -46,8 +46,6 @@ public:
 	double evaluate(double input[INSIZE]) const;
 	double evaluate(double input[INSIZE], double hidz[HIDSIZE], double* outz) const;
 	void update(double input[INSIZE], double output);
-	void serialize(const std::string& path);
-	static network network::deserialize(const std::string& path);
 	int no;
 private:
 	void backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE]);

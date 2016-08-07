@@ -178,33 +178,3 @@ void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* n
          nabla_w0[k][j] = input[k] * hiderror[j];
      }
 }
-
-void network::serialize(const std::string& path)
-{
-	using namespace std;
-
-	snet mynet;
-	mynet.net = *this;
-
-	ofstream outputBuffer(path, ios::out | ios::binary);
-
-	outputBuffer.write(mynet.bytes, sizeof(mynet.bytes));
-
-	outputBuffer.close();
-}
-
-network network::deserialize(const std::string& path)
-{
-	using namespace std;
-	snet mynet;
-	ifstream fileBuffer(path, ios::in | ios::binary);
-
-	if (fileBuffer.is_open())
-	{
-		fileBuffer.seekg(0, ios::beg);
-		fileBuffer.getline(mynet.bytes, sizeof(mynet.bytes));
-	}
-
-	fileBuffer.close();
-	return mynet.net;
-}
