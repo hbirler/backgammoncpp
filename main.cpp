@@ -48,7 +48,7 @@ int main()
 
 	int ind = 0;
 
-	string netpath = "./network.bin";
+	string netpath = "./nets/network.bin";
 
 	if (file_exists(netpath))
 	{
