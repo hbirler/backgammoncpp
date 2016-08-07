@@ -1,15 +1,11 @@
 #include "tavla.h"
 
-int randint(int min, int max)
+/*int randint(int min, int max)
 {
     return min + (rand() % (max - min + 1));
-}
+}*/
 
-void roll(int* d1, int* d2)
-{
-    *d1 = randint(1,6);
-    *d2 = randint(1,6);
-}
+
 
 
 tavla::tavla()

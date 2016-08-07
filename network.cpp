@@ -1,5 +1,7 @@
 #include "network.h"
 
+
+
 double sigmoid(double z)
 {
     return 1.0/(1.0+exp(-z));
@@ -10,32 +12,38 @@ double sigmoid_prime(double z)
     return sigmoid(z)*(1-sigmoid(z));
 }
 
-double fRand()
-{
-    return (double)rand() / RAND_MAX;
-}
 
-double randn()
+
+/*double randn()
 {
     double u1 = fRand(); //these are uniform(0,1) random doubles
     double u2 = fRand();
     double randStdNormal = sqrt(-2.0 * log(u1)) *
                 sin(2.0 * PI * u2); //random normal(0,1)
     return randStdNormal;
-}
+}*/
 
 double network_random::evaluate(double input[INSIZE]) const
 {
-    return fRand();
+    return randf();
 }
 void network_random::update(double input[INSIZE], double output)
 {
     return;
 }
 
-network::network(double eta, double decay, int nono)
+union snet 
 {
-    this->nono = nono;
+	network net;
+	char bytes[sizeof(network)];
+	snet() {}
+	~snet() {}
+};
+
+
+network::network(double eta, double decay)
+{
+    this->no = 0;
     this->eta = eta;
     this->decay = decay;
     
@@ -151,7 +159,7 @@ void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* n
     for (int i = 0; i < HIDSIZE; i++)
         hidden[i] = sigmoid(hidz[i]);
     
-    outerror = output * sigmoid_prime(outz);
+    outerror = 1 * sigmoid_prime(outz);
     for (int i = 0; i < HIDSIZE; i++)
     {
         hiderror[i] = weights1[i] * outerror * sigmoid_prime(hidz[i]);
@@ -169,4 +177,34 @@ void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* n
      {
          nabla_w0[k][j] = input[k] * hiderror[j];
      }
+}
+
+void network::serialize(const std::string& path)
+{
+	using namespace std;
+
+	snet mynet;
+	mynet.net = *this;
+
+	ofstream outputBuffer(path, ios::out | ios::binary);
+
+	outputBuffer.write(mynet.bytes, sizeof(mynet.bytes));
+
+	outputBuffer.close();
+}
+
+network network::deserialize(const std::string& path)
+{
+	using namespace std;
+	snet mynet;
+	ifstream fileBuffer(path, ios::in | ios::binary);
+
+	if (fileBuffer.is_open())
+	{
+		fileBuffer.seekg(0, ios::beg);
+		fileBuffer.getline(mynet.bytes, sizeof(mynet.bytes));
+	}
+
+	fileBuffer.close();
+	return mynet.net;
 }

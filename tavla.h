@@ -10,6 +10,8 @@
 #include <sstream>
 #include <cstdio>
 #include <algorithm>
+#include <random>
+#include "myrandom.h"
 
 #ifndef _INSIZE
 #define _INSIZE

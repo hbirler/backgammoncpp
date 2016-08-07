@@ -2,9 +2,9 @@
 
 const int LRATE = 0.7;
 
-double evaluate(const tavla& t, const networkbase& net, int turn, bool toto)
+double evaluate(const tavla& t, const networkbase& net, int turn)
 {
-    if (!toto && t.is_end())
+    if (t.is_end())
     {
         //printf("KEKEKEKEK\n");
         //if (t.get_winner() == turn)
@@ -26,12 +26,13 @@ tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
     tav.next_states(d1, d2, vec);
     
     tavla best = tav;
-    double maxval = -1.0;
+    double maxval = tav.turn==BLACK?INFINITY:-1.0;
+
     
     for (auto& t:vec)
     {
         double nval = evaluate(t, net, tav.turn);
-        if (nval > maxval)
+        if (((tav.turn == WHITE) && (nval > maxval)) || ((tav.turn == BLACK) && (nval < maxval)))
         {
             best = t;
             maxval = nval;
@@ -70,10 +71,10 @@ void learn_game(network& net)
                 wfirst = false;
             else
             {
-                double res = evaluate(tav, net, tav.turn);
+                double res = evaluate(tav, net);
                 //if (rand() % 1000 == 0)
                 //    printf("%lf %lf\n",evaluate(prew, net, WHITE),evaluate(tav, net, WHITE));
-                update_net(prew, res, net,WHITE);
+                update_net(prew, res, net);
             }
             prew = tav;
         }
@@ -83,18 +84,18 @@ void learn_game(network& net)
                 bfirst = false;
             else
             {
-                double res = evaluate(tav, net, tav.turn);
-                update_net(preb, res, net,BLACK);
+                double res = evaluate(tav, net);
+                update_net(preb, res, net);
             }
             preb = tav;
         }
         
         tav = choose_next(tav, net, d1, d2);
     }
-    double resw = evaluate(tav, net, WHITE);
-    update_net(prew, resw, net,WHITE);
-    double resb = evaluate(tav, net, BLACK);
-    update_net(preb, resb, net,BLACK);
+    double resw = evaluate(tav, net);
+    update_net(prew, resw, net);
+    //double resb = evaluate(tav, net, BLACK);
+    //update_net(preb, resb, net,BLACK);
     //if (rand() % 100 ==0)
     //   printf("\t%lf %lf\n",resw,resb);
     
