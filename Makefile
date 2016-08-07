@@ -1,7 +1,7 @@
 all: tavlacpp
 
 tavlacpp: main.o test.o learn.o network.o tavla.o
-	g++ -std=c++11 main.o test.o learn.o network.o tavla.o -o tavla
+	g++ -std=c++11 main.o test.o learn.o network.o tavla.o serialize.o myrandom.o -o tavla
 
 test.o: test.cpp
 	g++ -std=c++11 -O2 -c test.cpp
@@ -17,9 +17,6 @@ network.o: network.cpp
 
 tavla.o: tavla.cpp
 	g++ -std=c++11 -O2 -c tavla.cpp
-	
-serialize.o: serialize.cpp
-	g++ -std=c++11 -O2 -c serialize.cpp
 
 serialize.o: serialize.cpp
 	g++ -std=c++11 -O2 -c serialize.cpp
