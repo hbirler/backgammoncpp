@@ -2,6 +2,7 @@
 #define SERIALIZEH
 
 #include <string>
+#include <fstream>
 
 template <class T>
 void serialize(const std::string& path, T const& val);

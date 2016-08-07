@@ -1,6 +1,6 @@
 all: tavlacpp
 
-tavlacpp: main.o test.o learn.o network.o tavla.o
+tavlacpp: main.o test.o learn.o network.o tavla.o serialize.o myrandom.o
 	g++ -std=c++11 main.o test.o learn.o network.o tavla.o serialize.o myrandom.o -o tavla
 
 test.o: test.cpp
