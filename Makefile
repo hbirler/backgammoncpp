@@ -17,6 +17,15 @@ network.o: network.cpp
 
 tavla.o: tavla.cpp
 	g++ -std=c++11 -O2 -c tavla.cpp
+	
+serialize.o: serialize.cpp
+	g++ -std=c++11 -O2 -c serialize.cpp
+
+serialize.o: serialize.cpp
+	g++ -std=c++11 -O2 -c serialize.cpp
+	
+myrandom.o: myrandom.cpp
+	g++ -std=c++11 -O2 -c myrandom.cpp
 
 clean:
 	rm *o tavlacpp
