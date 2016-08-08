@@ -13,13 +13,16 @@ void run_businessman();
 
 int main(int argc, char *argv[])
 {
-	if (argc > 1 && strcmp(argv[1], "test") == 0)
+	if (argc > 1)
 	{
-		return main_test();
+		if (strcmp(argv[1], "test") == 0)
+			return main_test();
+		else if (strcmp(argv[1], "play") == 0)
+			return play(argc - 2, argv + 2);
 	}
 
-	run_tests();
-	run_businessman();
+	//run_tests();
+	//run_businessman();
 	run_learning();
 
 	system("pause");
@@ -52,11 +55,11 @@ void run_learning()
 
 	int ind = 0;
 
-	string netpath = "./output/network.bin";
+	string netpath = "./output/";
 
-	if (file_exists(netpath))
+	if (file_exists(netpath + "network.bin"))
 	{
-		net = deserialize<network>(netpath);
+		net = deserialize<network>(netpath + "network.bin");
 		ind = net.no;
 		cout << "Loaded network... #" << ind << endl;
 	}
@@ -83,12 +86,15 @@ void run_learning()
 			tester.test_network(net, 50, 50, ind, false);
 
 			cout << "\tSaving network...";
-			serialize<network>(netpath, net);
+			serialize<network>(netpath + "net-" + to_string(ind) + ".bin", net);
+			serialize<network>(netpath + "network.bin", net);
 			cout << " Saved" << endl;
 		}
 
-
-		learn_game(net, buzi);
+		if (ind < 30000)
+			learn_game(net, buzi);
+		else
+			learn_game(net, net);
 	}
 
 

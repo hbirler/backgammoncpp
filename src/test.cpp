@@ -103,11 +103,11 @@ bool test_tavla2vector(bool log)
 
 bool test_choosenext(bool log)
 {
-	evaluatorlambda myeval([](double input[INSIZE])->double {
+	evaluatorlambda myeval([](const double input[INSIZE])->double {
 		tavla t(input);
 		int rval = t.checkers[0][23] + t.checkers[0][4] - (t.checkers[1][23] + t.checkers[1][4]);
 		return sigmoid(rval);
-	}, [](double input[INSIZE], double output) {
+	}, [](const double input[INSIZE], double output) {
 		return;
 	});
 
@@ -141,6 +141,42 @@ bool test_choosenext(bool log)
 	return result;
 }
 
+bool test_serialize(bool log)
+{
+	string path("test.bin");
+	network net(0.1, 0.5);
+	serialize<network>(path, net);
+	
+	network des = deserialize<network>(path);
+
+	remove(path.c_str());
+	
+	bool result = net == des;
+	
+	return result;
+}
+
+bool test_base16(bool log)
+{
+	const char* teststr = "potato";
+
+	string out = encode_16(teststr, 7);
+	if (log)
+		cout << out << endl;
+
+	bool r1 = out == "706F7461746F00";
+
+	char mstr[7];
+	decode_16(out, mstr);
+
+
+	bool r2 = strcmp(teststr, mstr) == 0;
+
+	bool result = r1 && r2;
+
+	return result;
+}
+
 test::test(const function<bool()>& foo, const string& name, const string& parameters)
 {
 	this->foo = foo;
@@ -155,7 +191,9 @@ test default_tests[] = {
 	test([]() -> bool { return test_learning(false, 0.8); }, "Learning", "val=0.8"),
 	test([]() -> bool { return test_deviation(false); }, "Deviation"),
 	test([]() -> bool { return test_tavla2vector(false); }, "Tav2Vec"),
-	test([]() -> bool { return test_choosenext(false); }, "ChooseNxt")
+	test([]() -> bool { return test_choosenext(false); }, "ChooseNxt"),
+	test([]() -> bool { return test_serialize(false); }, "Serialize"),
+	test([]() -> bool { return test_base16(false); }, "Base16ED")
 };
 
 bool run_tests()

@@ -26,12 +26,13 @@ void serialize(const std::string& path, T const& val)
 {
 	using namespace std;
 
-	union_bytes<T> mynet;
-	mynet.val = val;
-
 	ofstream outputBuffer(path, ios::out | ios::binary | ios::trunc);
 
-	outputBuffer.write(mynet.bytes, sizeof(mynet.bytes));
+	bool isopen = outputBuffer.is_open();
+
+	int size = sizeof(T);
+
+	outputBuffer.write((const char*)&val, size);
 
 	outputBuffer.close();
 }
@@ -41,15 +42,19 @@ template <typename T>
 T deserialize(const std::string& path)
 {
 	using namespace std;
-	union_bytes<T> mynet;
-	ifstream fileBuffer(path, ios::in | ios::binary);
+	ifstream fileBuffer(path, ios::in | ios::binary | ios::ate);
+
+	T retval;
+	int size = sizeof(T);
+	int fsize = fileBuffer.tellg();
 
 	if (fileBuffer.is_open())
 	{
+		//fileBuffer.clear();
 		fileBuffer.seekg(0, ios::beg);
-		fileBuffer.getline(mynet.bytes, sizeof(mynet.bytes));
+		fileBuffer.read((char*)&retval, size);
 	}
 
 	fileBuffer.close();
-	return mynet.val;
+	return retval;
 }

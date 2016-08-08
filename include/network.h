@@ -5,6 +5,7 @@
 #include <random>
 #include <fstream>
 #include <functional>
+#include <cstring>
 #include "globals.h"
 #include "myrandom.h"
 
@@ -27,20 +28,20 @@ class evaluatorbase
 public:
 	virtual ~evaluatorbase() {}
 
-	virtual double evaluate(double input[INSIZE]) const=0;
-	virtual void update(double input[INSIZE], double output)=0;
+	virtual double evaluate(const double input[INSIZE]) const=0;
+	virtual void update(const double input[INSIZE], double output)=0;
 };
 
 class evaluatorlambda :public evaluatorbase
 {
 public:
-	evaluatorlambda(const std::function<double(double[INSIZE])>& eval, const std::function<void(double[INSIZE], double output)>& updt);
+	evaluatorlambda(const std::function<double(const double[INSIZE])>& eval, const std::function<void(const double[INSIZE], double output)>& updt);
 	~evaluatorlambda();
-	double evaluate(double input[INSIZE]) const;
-	void update(double input[INSIZE], double output);
+	double evaluate(const double input[INSIZE]) const;
+	void update(const double input[INSIZE], double output);
 private:
-	std::function<double(double[INSIZE])> foo_eval;
-	std::function<void(double[INSIZE], double output)> foo_updt;
+	std::function<double(const double[INSIZE])> foo_eval;
+	std::function<void(const double[INSIZE], double output)> foo_updt;
 };
 
 class random_evaluator:public evaluatorbase
@@ -48,8 +49,8 @@ class random_evaluator:public evaluatorbase
 public:
 	virtual ~random_evaluator() {}
 
-	double evaluate(double input[INSIZE]) const;
-	void update(double input[INSIZE], double output);
+	double evaluate(const double input[INSIZE]) const;
+	void update(const double input[INSIZE], double output);
 };
 
 class network:public evaluatorbase
@@ -57,12 +58,13 @@ class network:public evaluatorbase
 public:
 	network(double eta = 0.01, double decay = 0.7);
 	~network();
-	double evaluate(double input[INSIZE]) const;
-	double evaluate(double input[INSIZE], double hidz[HIDSIZE], double* outz) const;
-	void update(double input[INSIZE], double output);
+	double evaluate(const double input[INSIZE]) const;
+	double evaluate(const double input[INSIZE], double hidz[HIDSIZE], double* outz) const;
+	void update(const double input[INSIZE], double output);
 	int no;
+	bool operator==(const network& other) const ;
 private:
-	void backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE]);
+	void backprop(const double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE]);
 	double biases0[HIDSIZE];
 	double biases1;
 	double weights0[INSIZE][HIDSIZE];

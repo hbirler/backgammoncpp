@@ -1,1 +1,1 @@
-.\bin\tavla.exe
+.\bin\tavla.exe %*

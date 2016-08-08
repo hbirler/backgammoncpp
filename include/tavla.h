@@ -34,7 +34,7 @@ class tavla
 {
 public:
     tavla();
-	tavla(double input[INSIZE]);
+	tavla(const double input[INSIZE]);
     tavla(const tavla& other);
     ~tavla();
     bool is_valid()  const;
@@ -48,7 +48,7 @@ public:
     bool operator<(const tavla& rhs) const ;
     bool operator==(const tavla& rhs) const ;
     void to_vector(double output[INSIZE], bool flip=false) const;
-    int turn;
+    char turn;
 	uint8_t checkers[2][26] = {{0}, {0}};
 private:
     

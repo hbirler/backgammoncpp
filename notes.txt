@@ -1,1 +1,4 @@
 to_vector -> final vals not double
+
+
+26100 -> switch from buzi to self

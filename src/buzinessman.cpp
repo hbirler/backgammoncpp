@@ -1,6 +1,6 @@
 #include "buzinessman.h"
 
-double buzinessman::evaluate(double input[INSIZE]) const
+double buzinessman::evaluate(const double input[INSIZE]) const
 {
 	tavla tav(input);
 
@@ -46,4 +46,4 @@ double buzinessman::evaluate(double input[INSIZE]) const
 	return sigmoid(retval); //-4 to 4
 }
 
-void buzinessman::update(double input[INSIZE], double output) {}
+void buzinessman::update(const double input[INSIZE], double output) {}

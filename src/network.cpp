@@ -13,7 +13,7 @@ double sigmoid_prime(double z)
 }
 
 
-evaluatorlambda::evaluatorlambda(const std::function<double(double[INSIZE])>& eval, const std::function<void(double[INSIZE], double output)>& updt)
+evaluatorlambda::evaluatorlambda(const std::function<double(const double[INSIZE])>& eval, const std::function<void(const double[INSIZE], double output)>& updt)
 {
 	this->foo_eval = eval;
 	this->foo_updt = updt;
@@ -21,12 +21,12 @@ evaluatorlambda::evaluatorlambda(const std::function<double(double[INSIZE])>& ev
 
 evaluatorlambda::~evaluatorlambda() {}
 
-double evaluatorlambda::evaluate(double input[INSIZE]) const
+double evaluatorlambda::evaluate(const double input[INSIZE]) const
 {
 	return this->foo_eval(input);
 }
 
-void evaluatorlambda::update(double input[INSIZE], double output)
+void evaluatorlambda::update(const double input[INSIZE], double output)
 {
 	this->foo_updt(input, output);
 }
@@ -42,11 +42,11 @@ void evaluatorlambda::update(double input[INSIZE], double output)
     return randStdNormal;
 }*/
 
-double random_evaluator::evaluate(double input[INSIZE]) const
+double random_evaluator::evaluate(const double input[INSIZE]) const
 {
     return randf();
 }
-void random_evaluator::update(double input[INSIZE], double output)
+void random_evaluator::update(const double input[INSIZE], double output)
 {
     return;
 }
@@ -58,8 +58,6 @@ union snet
 	snet() {}
 	~snet() {}
 };
-
-
 network::network(double eta, double decay)
 {
     this->no = 0;
@@ -87,13 +85,13 @@ network::~network()
     this->eta = 0.01;
     this->decay = 0.7;
 }
-double network::evaluate(double input[INSIZE]) const
+double network::evaluate(const double input[INSIZE]) const
 {
     double hidz[HIDSIZE];// = {0.0}
     double outz = 0.0;
     return evaluate(input, hidz, &outz);
 }
-double network::evaluate(double input[INSIZE], double hidz[HIDSIZE], double* outz) const
+double network::evaluate(const double input[INSIZE], double hidz[HIDSIZE], double* outz) const
 {
     double hidden[HIDSIZE] = {0.0};
     double output = 0.0;
@@ -120,7 +118,7 @@ double network::evaluate(double input[INSIZE], double hidz[HIDSIZE], double* out
     
     return output;
 }
-void network::update(double input[INSIZE], double output)
+void network::update(const double input[INSIZE], double output)
 {
     //double* nabla_b[2], nabla_w[2];
     double nabla_b0[HIDSIZE];
@@ -163,7 +161,7 @@ void network::update(double input[INSIZE], double output)
      }
     
 }
-void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE])
+void network::backprop(const double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE])
 {
     //printf("%d\n",nono);
     
@@ -197,3 +195,35 @@ void network::backprop(double input[INSIZE], double nabla_b0[HIDSIZE], double* n
          nabla_w0[k][j] = input[k] * hiderror[j];
      }
 }
+
+
+bool network::operator==(const network& other) const
+{
+    bool result = true;
+    result &= no == other.no;
+    result &= biases1 == other.biases1;
+    result &= e_b1 == other.e_b1;
+    result &= eta == other.eta;
+    result &= decay == other.decay;
+    result &= memcmp(biases0, other.biases0, HIDSIZE * sizeof(double)) == 0;
+    result &= memcmp(weights0, other.weights0, INSIZE * HIDSIZE * sizeof(double)) == 0;
+    result &= memcmp(weights1, other.weights1, HIDSIZE * sizeof(double)) == 0;
+    result &= memcmp(e_b0, other.e_b0, HIDSIZE * sizeof(double)) == 0;
+    result &= memcmp(e_w0, other.e_w0, INSIZE * HIDSIZE * sizeof(double)) == 0;
+    result &= memcmp(e_w1, other.e_w1, HIDSIZE * sizeof(double)) == 0;
+    return result;
+}
+/*
+int no;
+double biases1;
+double e_b1;
+double eta;
+double decay;
+double biases0[HIDSIZE];
+double weights0[INSIZE][HIDSIZE];
+double weights1[HIDSIZE];
+double e_b0[HIDSIZE];
+double e_w0[INSIZE][HIDSIZE];
+double e_w1[HIDSIZE];
+
+    */

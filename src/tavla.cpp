@@ -26,7 +26,7 @@ tavla::tavla(const tavla& other)
     this->turn = other.turn;
 }
 
-tavla::tavla(double input[INSIZE])
+tavla::tavla(const double input[INSIZE])
 {
 	for (int i = 0; i < 24; i++)
 	{

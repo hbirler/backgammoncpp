@@ -4,15 +4,12 @@ const int LRATE = 0.7;
 
 double evaluate(const tavla& t, const evaluatorbase& net, int turn)
 {
+	static double output[INSIZE];
     if (t.is_end())
     {
-        //printf("KEKEKEKEK\n");
-        //if (t.get_winner() == turn)
-        //    printf("AYYYYLMAOOOO %d %d\n",t.get_winner(),turn);
         return t.get_winner() == turn;
     }
     
-    double output[INSIZE];
     t.to_vector(output, turn);
     
     double out = net.evaluate(output);
@@ -59,7 +56,7 @@ tavla choose_next(tavla tav, const evaluatorbase& net, int d1, int d2)
 
 void update_net(const tavla& tav, double val, evaluatorbase& net, int turn = 0)
 {
-    double input[INSIZE];
+    static double input[INSIZE];
     tav.to_vector(input, turn);
     //printf("xx%d\n",net.nono);
     net.update(input, val);
