@@ -259,11 +259,12 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec) const
         this->next_die(d1, s0);
         for (int i = 1; i < 4; i++)
         {
-            if (s0.empty())
-                break;
+			if (s0.empty())
+				break;
             for (auto& t:s0)
                 t.next_die(d1, s1);
-            swap(s0, s1);
+			if (!s1.empty())
+				swap(s0, s1);
             s1.clear();
         }
     }
@@ -272,12 +273,20 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec) const
         this->next_die(d1, s0);
         for (auto& t:s0)
             t.next_die(d2, s1);
-        swap(s0, s1);
+		if (!s1.empty())
+			swap(s0, s1);
         s1.clear();
+
+		int s0size = s0.size();
         
         this->next_die(d2, s1);
         for (auto& t:s1)
             t.next_die(d1, s0);
+		if (s0.size() == s0size)
+		{
+			for (auto& t : s1)
+				s0.insert(t);
+		}
         s1.clear();
     }
     if (s0.empty())

@@ -60,10 +60,20 @@ int play(int argc, char* argv[])
 		{
 			int from = stoi(argv[i * 2 + 1]);
 			int to = stoi(argv[i * 2 + 2]);
+
+			if (from < 0 || to < 0 || from > 25 || to > 25)
+			{
+				nmove.checkers[0][0] = 25;
+				break;
+			}
+
 			nmove.checkers[0][from]--;
 			nmove.checkers[0][to]++;
-			nmove.checkers[1][25] += nmove.checkers[1][25 - to];
-			nmove.checkers[1][25 - to] = 0;
+			if (to != 0)
+			{
+				nmove.checkers[1][25] += nmove.checkers[1][25 - to];
+				nmove.checkers[1][25 - to] = 0;
+			}
 		}
 		nmove.turn = 1 - nmove.turn;
 		//cout << "**********\n" << nmove.str() << "\n**********\n" << endl;
