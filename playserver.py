@@ -4,8 +4,13 @@ app = Flask(__name__)
 
 def run_play(params):
 	print "Running play"
-	proc = subprocess.Popen(['bin/tavla', 'play']+params, stdout=subprocess.PIPE)
-	tmp = proc.stdout.read()
+	for i in xrange(4):
+		try:
+			proc = subprocess.Popen(['bin/tavla', 'play']+params, stdout=subprocess.PIPE)
+			tmp = proc.stdout.read()
+			break
+		except:
+			continue
 	#print tmp
 	return tmp
 
@@ -27,7 +32,7 @@ def play():
 	return res
 
 if __name__ == "__main__":
-	app.run(host="0.0.0.0",port=8888,debug=True,threaded=True)
+	app.run(host="0.0.0.0",port=5000,debug=True,threaded=True)
 
 
 
