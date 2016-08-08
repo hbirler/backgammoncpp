@@ -22,13 +22,28 @@ tavla::tavla()
 
 tavla::tavla(const tavla& other)
 {
-    /*for (int i = 0; i < 2; i++)
-     for (int k = 0; k < 26; k++)
-     {
-         this->checkers[i][k] = other.checkers[i][k];
-     }*/
     std::memcpy(this->checkers, other.checkers, sizeof(this->checkers));
     this->turn = other.turn;
+}
+
+tavla::tavla(double input[INSIZE])
+{
+	for (int i = 0; i < 24; i++)
+	{
+		checkers[0][i + 1] = checkers[1][i + 1] = 0;
+		double s0 = 0.0, s1 = 0.0;
+		for (int k = 0; k < 4; k++)
+			s0 += input[i * 8 + k] * (k == 3 ? 2.0 : 1.0);
+		for (int k = 0; k < 4; k++)
+			s1 += input[i * 8 + 4 + k] * (k == 3 ? 2.0 : 1.0);
+		checkers[0][i + 1] = s0 + 0.5;
+		checkers[1][i + 1] = s1 + 0.5;
+	}
+	checkers[0][25] = input[192] * 2.0 + 0.5;
+	checkers[1][25] = input[193] * 2.0 + 0.5;
+	checkers[0][0] = input[194] * 16.0 + 0.5;
+	checkers[1][0] = input[195] * 16.0 + 0.5;
+	turn = input[196] < input[197];
 }
 
 tavla::~tavla()
@@ -275,22 +290,40 @@ void tavla::to_vector(double output[INSIZE], bool flip) const
     
     for (int i = 0; i < 24; i++)
     {
-        for (int k = 0; k < checkers[flip][i+1]; k++)
-        {
-            output[i*8 + k] = (k<3)?1.0:(checkers[flip][i+1]-3)/2.0;
-        }
-        for (int k = 0; k < checkers[!flip][i+1]; k++)
-        {
-            output[i*8 + 4 + k] = (k<3)?1.0:(checkers[!flip][i+1]-3)/2.0;
-        }
+		switch (checkers[flip][i + 1])
+		{
+		case 0:
+			break;
+		default:
+			output[i * 8 + 3] = (checkers[flip][i + 1] - 3) / 2.0;
+		case 3:
+			output[i * 8 + 2] = 1.0;
+		case 2:
+			output[i * 8 + 1] = 1.0;
+		case 1:
+			output[i * 8 + 0] = 1.0;
+		}
+		switch (checkers[!flip][i + 1])
+		{
+		case 0:
+			break;
+		default:
+			output[i * 8 + 4 + 3] = (checkers[!flip][i + 1] - 3) / 2.0;
+		case 3:
+			output[i * 8 + 4 + 2] = 1.0;
+		case 2:
+			output[i * 8 + 4 + 1] = 1.0;
+		case 1:
+			output[i * 8 + 4 + 0] = 1.0;
+		}
         
     }
     output[192] = checkers[flip][25] / 2.0;
     output[193] = checkers[!flip][25] / 2.0;
     output[194] = checkers[flip][0] / 16.0;
     output[195] = checkers[!flip][0] / 16.0;
-    output[196] = turn == flip;
-    output[197] = turn == !flip;
+    output[196] = turn == flip;		//WHITE
+    output[197] = turn == !flip;	//BLACK
 }
 bool tavla::operator<(const tavla& other) const 
 {

@@ -69,8 +69,36 @@ void learn_game(evaluatorbase& net)
 {
 	learn_game(net, net);
 }
-
 void learn_game(evaluatorbase& netw, evaluatorbase& netb)
+{
+	random_evaluator dumb;
+	tavla tav;
+
+	tavla pre;
+
+	while (!tav.is_end())
+	{
+		int d1, d2;
+		roll(&d1, &d2);
+
+		update_net(pre, evaluate(tav, netw, WHITE), netw, WHITE);
+		update_net(pre, evaluate(tav, netb, BLACK), netw, BLACK);
+		pre = tav;
+
+		if (tav.turn == WHITE)
+			tav = choose_next(tav, netw, d1, d2);
+		else if (tav.turn == BLACK)
+			tav = choose_next(tav, netb, d1, d2);
+	}
+	update_net(pre, evaluate(tav, netw, WHITE), netw, WHITE);
+	update_net(pre, evaluate(tav, netb, BLACK), netw, BLACK);
+
+	update_net(tav, evaluate(tav, netw, WHITE), netw, WHITE);
+	update_net(tav, evaluate(tav, netb, BLACK), netw, BLACK);
+
+}
+
+void learn_game_depr(evaluatorbase& netw, evaluatorbase& netb)
 {
     random_evaluator dumb;
     tavla tav;

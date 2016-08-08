@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
 		return main_test();
 	}
 
-
-	//run_businessman();
+	run_tests();
+	run_businessman();
 	run_learning();
 
 	system("pause");

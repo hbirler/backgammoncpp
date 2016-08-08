@@ -13,6 +13,25 @@ double sigmoid_prime(double z)
 }
 
 
+evaluatorlambda::evaluatorlambda(const std::function<double(double[INSIZE])>& eval, const std::function<void(double[INSIZE], double output)>& updt)
+{
+	this->foo_eval = eval;
+	this->foo_updt = updt;
+}
+
+evaluatorlambda::~evaluatorlambda() {}
+
+double evaluatorlambda::evaluate(double input[INSIZE]) const
+{
+	return this->foo_eval(input);
+}
+
+void evaluatorlambda::update(double input[INSIZE], double output)
+{
+	this->foo_updt(input, output);
+}
+
+
 
 /*double randn()
 {

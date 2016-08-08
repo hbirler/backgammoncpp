@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <random>
 #include <fstream>
+#include <functional>
 #include "globals.h"
 #include "myrandom.h"
 
@@ -19,6 +20,8 @@ const int INSIZE = 198;
 #endif
 const int HIDSIZE = 50;
 
+
+
 class evaluatorbase
 {
 public:
@@ -26,6 +29,18 @@ public:
 
 	virtual double evaluate(double input[INSIZE]) const=0;
 	virtual void update(double input[INSIZE], double output)=0;
+};
+
+class evaluatorlambda :public evaluatorbase
+{
+public:
+	evaluatorlambda(const std::function<double(double[INSIZE])>& eval, const std::function<void(double[INSIZE], double output)>& updt);
+	~evaluatorlambda();
+	double evaluate(double input[INSIZE]) const;
+	void update(double input[INSIZE], double output);
+private:
+	std::function<double(double[INSIZE])> foo_eval;
+	std::function<void(double[INSIZE], double output)> foo_updt;
 };
 
 class random_evaluator:public evaluatorbase

@@ -2,21 +2,7 @@
 
 double buzinessman::evaluate(double input[INSIZE]) const
 {
-	tavla tav;
-	for (int i = 0; i < 24; i++)
-	{
-		tav.checkers[0][i + 1] = tav.checkers[1][i + 1] = 0;
-		for (int k = 0; k < 4; k++)
-			tav.checkers[0][i + 1] += input[i * 8 + k];
-		for (int k = 0; k < 4; k++)
-			tav.checkers[1][i + 1] += input[i * 8 + 4 + k];
-
-	}
-	tav.checkers[0][25] = input[192] * 2.0;
-	tav.checkers[1][25] = input[193] * 2.0;
-	tav.checkers[0][0] = input[194] * 16.0;
-	tav.checkers[1][0] = input[195] * 16.0;
-	tav.turn = input[196] > input[197];
+	tavla tav(input);
 
 	double retval = 0.0;
 
