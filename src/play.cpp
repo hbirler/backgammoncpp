@@ -106,7 +106,7 @@ int play(int argc, char* argv[])
 	else if (argc != 0)
 		cout << "Enemy Dice: " << ed1 << " " << ed2 << "\n";
 	else
-		cout << "Begin!" << "\n";
+		cout << "Begin! #" << net_ind << "\n";
 
 	cout << "\n" << retgame.tav.str_pretty() << "\n";
 

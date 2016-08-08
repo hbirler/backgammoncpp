@@ -64,6 +64,8 @@ void run_learning()
 		cout << "Loaded network... #" << ind << endl;
 	}
 
+	net.set_eta(0.01);
+
 	cout << std::fixed << std::setprecision(2);
 
 	clock_t begin = clock();

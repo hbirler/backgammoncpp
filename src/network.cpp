@@ -85,6 +85,10 @@ network::~network()
     this->eta = 0.01;
     this->decay = 0.7;
 }
+void network::set_eta(double neta)
+{
+	this->eta = neta;
+}
 double network::evaluate(const double input[INSIZE]) const
 {
     double hidz[HIDSIZE];// = {0.0}
