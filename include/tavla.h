@@ -34,7 +34,7 @@ class tavla
 {
 public:
     tavla();
-	tavla::tavla(double input[INSIZE]);
+	tavla(double input[INSIZE]);
     tavla(const tavla& other);
     ~tavla();
     bool is_valid()  const;
