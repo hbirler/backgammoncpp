@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
 	}
 
 
-	run_businessman();
-	//run_learning();
+	//run_businessman();
+	run_learning();
 
 	system("pause");
     
@@ -34,7 +34,7 @@ void run_businessman()
 	buzinessman net;
 
 
-	cout << "Testing Businessman" << endl;
+	cout << "Testing Buzinessman" << endl;
 	tester.test_network(net, 50, 50, 0);
 }
 
@@ -42,6 +42,9 @@ void run_businessman()
 void run_learning()
 {
 	network net(0.1, 0.7);
+	buzinessman buzi;
+
+
 	ofstream testout;
 	testout.open("./output/testout.txt", ios::out | ios::app);
 	nettest tester(&testout);
@@ -74,8 +77,10 @@ void run_learning()
 
 		if (ind % 1000 == 0)
 		{
-			cout << "\tTesting network..." << endl;
-			tester.test_network(net, 50, 50, ind);
+			cout << "\tTesting network against buzi..." << endl;
+			tester.test_network(net, 50, 50, ind, true);
+			cout << "\tTesting network against rand..." << endl;
+			tester.test_network(net, 50, 50, ind, false);
 
 			cout << "\tSaving network...";
 			serialize<network>(netpath, net);
@@ -83,7 +88,7 @@ void run_learning()
 		}
 
 
-		learn_game(net);
+		learn_game(net, buzi);
 	}
 
 

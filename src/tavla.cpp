@@ -333,3 +333,7 @@ std::size_t std::hash<tavla>::operator()(const tavla& k) const
     seed ^= k.turn + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     return seed;
 }
+
+std::ostream& operator<<(std::ostream &strm, const tavla &a) {
+	return strm << a.str();
+}

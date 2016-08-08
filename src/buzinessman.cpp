@@ -26,12 +26,12 @@ double buzinessman::evaluate(double input[INSIZE]) const
 	for (int i = 0; i < 26; i++)
 	{
 		for (int k = 0; k < tav.checkers[0][i]; k++)
-			sumpos += i;
+			sumpos += (26 - i)*(26 - i);
 		for (int k = 0; k < tav.checkers[1][i]; k++)
-			sumpos -= i;
+			sumpos -= (26 - i)*(26 - i);
 	}
 
-	avgpos = sumpos / 15.0;
+	avgpos = sumpos / 15.0 / 10.0;
 
 	double sb = 0.0;
 	double sw = 0.0;
@@ -42,11 +42,20 @@ double buzinessman::evaluate(double input[INSIZE]) const
 		if (tav.checkers[1][i] >= 2)
 			sb++;
 	}
+	double open = 0.0;
+	for (int i = 0; i < 26; i++)
+	{
+		if (tav.checkers[0][i] == 1)
+			open -= 1;
+		if (tav.checkers[1][i] == 1)
+			open += 0.5;
+	}
+
 	double broken = - tav.checkers[0][25] * sb + tav.checkers[1][25] * sw;
 
 	double taken = (tav.checkers[0][0] - tav.checkers[1][0]) / 7.5;
 
-	retval = avgpos + broken / 2.0 + taken;
+	retval = avgpos + broken / 2.0 + taken + open;
 
 	return sigmoid(retval); //-4 to 4
 }

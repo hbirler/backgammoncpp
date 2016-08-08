@@ -11,7 +11,9 @@
 #include <cstdio>
 #include <algorithm>
 #include <random>
+#include <stdint.h>
 #include "myrandom.h"
+
 
 #ifndef _INSIZE
 #define _INSIZE
@@ -46,7 +48,7 @@ public:
     bool operator==(const tavla& rhs) const ;
     void to_vector(double output[INSIZE], bool flip=false) const;
     int turn;
-    char checkers[2][26] = {{0}, {0}};
+	uint8_t checkers[2][26] = {{0}, {0}};
 private:
     
 };
@@ -61,3 +63,4 @@ namespace std {
 }
 
 
+std::ostream& operator<<(std::ostream &strm, const tavla &a);

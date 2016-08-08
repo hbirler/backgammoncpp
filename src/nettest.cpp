@@ -28,16 +28,24 @@ nettest::~nettest()
 int nettest::test_game(const evaluatorbase& w, const evaluatorbase& b)
 {
     tavla tav;
-    
-    while (!tav.is_end())
-    {
-        int d1, d2;
-        roll(&d1, &d2);
-        if (tav.turn == WHITE)
-            tav = choose_next(tav, w, d1, d2);
-        else
-            tav = choose_next(tav, b, d1, d2);
-    }
+
+	std::vector<tavla> mygame;
+	//mygame.push_back(tav);
+	//std::cout << tav << std::endl;
+	while (!tav.is_end())
+	{
+		int d1, d2;
+		roll(&d1, &d2);
+		if (tav.turn == WHITE)
+			tav = choose_next(tav, w, d1, d2);
+		else
+			tav = choose_next(tav, b, d1, d2);
+		//mygame.push_back(tav);
+		//std::cout << tav << std::endl;
+	}
+
+
+
     return tav.get_winner();
 }
 
@@ -61,18 +69,22 @@ void nettest::log(const test_result& result, int netno)
     std::cout << std::endl; 
 }
 
-test_result nettest::test_network(const evaluatorbase& net, int numw, int numb, int netno)
+test_result nettest::test_network(const evaluatorbase& net, int numw, int numb, int netno, bool buzi)
 {
-    random_evaluator dumb;
+	random_evaluator dumb;
+	buzinessman buzy;
+
     int wwin = 0, bwin = 0;
     for (int i = 0; i < numw; i++)
     {
-        wwin += test_game(net, dumb) == WHITE;
+		int result = buzi? test_game(net, buzy):test_game(net, dumb);
+        wwin += result == WHITE;
     }
     
     for (int i = 0; i < numb; i++)
     {
-        bwin += test_game(dumb, net) == BLACK;
+		int result = buzi ? test_game(buzy, net) : test_game(dumb, net);
+        bwin += result == BLACK;
     }
     
     test_result res(wwin*1.0/numw, bwin*1.0/numb);

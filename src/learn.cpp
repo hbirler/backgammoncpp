@@ -57,7 +57,7 @@ tavla choose_next(tavla tav, const evaluatorbase& net, int d1, int d2)
     return retval;
 }*/
 
-void update_net(const tavla& tav, double val, network& net, int turn = 0)
+void update_net(const tavla& tav, double val, evaluatorbase& net, int turn = 0)
 {
     double input[INSIZE];
     tav.to_vector(input, turn);
@@ -65,7 +65,12 @@ void update_net(const tavla& tav, double val, network& net, int turn = 0)
     net.update(input, val);
 }
 
-void learn_game(network& net)
+void learn_game(evaluatorbase& net)
+{
+	learn_game(net, net);
+}
+
+void learn_game(evaluatorbase& netw, evaluatorbase& netb)
 {
     random_evaluator dumb;
     tavla tav;
@@ -86,10 +91,8 @@ void learn_game(network& net)
                 wfirst = false;
             else
             {
-                double res = evaluate(tav, net);
-                //if (rand() % 1000 == 0)
-                //    printf("%lf %lf\n",evaluate(prew, net, WHITE),evaluate(tav, net, WHITE));
-                update_net(prew, res, net);
+                double res = evaluate(tav, netw, WHITE);
+                update_net(prew, res, netw);
             }
             prew = tav;
         }
@@ -99,18 +102,21 @@ void learn_game(network& net)
                 bfirst = false;
             else
             {
-                double res = evaluate(tav, net);
-                update_net(preb, res, net);
+                double res = evaluate(tav, netb, BLACK);
+                update_net(preb, res, netw);
             }
             preb = tav;
         }
         
-        tav = choose_next(tav, net, d1, d2);
+		if (tav.turn == WHITE)
+			tav = choose_next(tav, netw, d1, d2);
+		else
+			tav = choose_next(tav, netb, d1, d2);
     }
-    double resw = evaluate(tav, net);
-    update_net(prew, resw, net);
-    //double resb = evaluate(tav, net, BLACK);
-    //update_net(preb, resb, net,BLACK);
+    double resw = evaluate(tav, netw, tav.turn);
+    update_net(prew, resw, netw, tav.turn);
+    double resb = evaluate(tav, netb, tav.turn);
+	update_net(preb, resb, netb, tav.turn);
     //if (rand() % 100 ==0)
     //   printf("\t%lf %lf\n",resw,resb);
     

@@ -4,6 +4,7 @@
 #include "network.h"
 #include "learn.h"
 #include "tavla.h"
+#include "buzinessman.h"
 #include <iostream>
 #include <iomanip>
 
@@ -22,7 +23,7 @@ public:
     nettest(std::ostream* os, bool tolog = true);
     ~nettest();
     int test_game(const evaluatorbase& w, const evaluatorbase& b);
-    test_result test_network(const evaluatorbase& net, int numw, int numb, int netno=-1);
+    test_result test_network(const evaluatorbase& net, int numw, int numb, int netno=-1, bool buzi=false);
     void log(const test_result& result, int netno=-1);
 private:
     bool tolog;
