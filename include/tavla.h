@@ -1,5 +1,4 @@
-#ifndef TAVLAH
-#define TAVLAH
+#pragma once
 
 #include <string>
 #include <set>
@@ -62,5 +61,3 @@ namespace std {
 }
 
 
-
-#endif

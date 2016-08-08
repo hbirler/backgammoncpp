@@ -1,5 +1,4 @@
-#ifndef NETWORKH
-#define NETWORKH
+#pragma once
 
 #include <cmath>
 #include <cstdlib>
@@ -20,25 +19,25 @@ const int INSIZE = 198;
 #endif
 const int HIDSIZE = 50;
 
-class networkbase
+class evaluatorbase
 {
 public:
-	virtual ~networkbase() {}
+	virtual ~evaluatorbase() {}
 
 	virtual double evaluate(double input[INSIZE]) const=0;
 	virtual void update(double input[INSIZE], double output)=0;
 };
 
-class network_random:public networkbase
+class random_evaluator:public evaluatorbase
 {
 public:
-	virtual ~network_random() {}
+	virtual ~random_evaluator() {}
 
 	double evaluate(double input[INSIZE]) const;
 	void update(double input[INSIZE], double output);
 };
 
-class network:public networkbase
+class network:public evaluatorbase
 {
 public:
 	network(double eta = 0.01, double decay = 0.7);
@@ -64,5 +63,3 @@ private:
 double sigmoid_prime(double z);
 double sigmoid(double z);
 double randn();
-
-#endif

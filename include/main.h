@@ -1,5 +1,4 @@
-#ifndef MAINH
-#define MAINH
+#pragma once
 
 #include <cstdio>
 #include <iostream>
@@ -10,6 +9,6 @@
 #include "network.h"
 #include "tavla.h"
 #include "learn.h"
+#include "nettest.h"
 #include "test.h"
-
-#endif
+#include "buzinessman.h"

@@ -1,33 +1,30 @@
-#ifndef TESTH
-#define TESTH
+#pragma once
 
+#include <cstdio>
+#include <cstdlib>
+#include <functional>
 
-#include "network.h"
-#include "learn.h"
 #include "tavla.h"
-#include <iostream>
-#include <iomanip>
+#include "network.h"
+#include "nettest.h"
 
-struct test_result
+using namespace std;
+
+struct test
 {
-    double white;
-    double black;
-    double avg;
-    test_result(double w, double b);
+	function<bool()> foo;
+	string name;
+	string parameters;
+	test(const function<bool()>& foo, const string& name = "Unnamed", const string& parameters = "default");
+	~test();
 };
 
-class tester
-{
-public:
-    tester();
-    tester(std::ostream* os, bool tolog = true);
-    ~tester();
-    int test_game(const networkbase& w, const networkbase& b);
-    test_result test_network(const networkbase& net, int numw, int numb, int netno=-1);
-    void log(const test_result& result, int netno=-1);
-private:
-    bool tolog;
-    std::ostream* out;
-};
+//test default_tests[];
 
-#endif
+bool test_deviation(bool log = false, double minst = 0.1, int length = 500);
+bool test_learning(bool log = false, double testval = 0.33, double eta = 0.01, double decay = 0.7, double eps = 0.00001, int length = 10000);
+
+
+bool run_tests();
+bool run_tests(test tests[], int size);
+int main_test();

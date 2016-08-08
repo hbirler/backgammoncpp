@@ -23,11 +23,11 @@ inline double sigmoid_prime(double z)
     return randStdNormal;
 }*/
 
-inline double network_random::evaluate(double input[INSIZE]) const
+double random_evaluator::evaluate(double input[INSIZE]) const
 {
     return randf();
 }
-inline void network_random::update(double input[INSIZE], double output)
+void random_evaluator::update(double input[INSIZE], double output)
 {
     return;
 }

@@ -1,5 +1,4 @@
-#ifndef SERIALIZEH
-#define SERIALIZEH
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -54,5 +53,3 @@ T deserialize(const std::string& path)
 	fileBuffer.close();
 	return mynet.val;
 }
-
-#endif

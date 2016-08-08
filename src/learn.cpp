@@ -2,7 +2,7 @@
 
 const int LRATE = 0.7;
 
-double evaluate(const tavla& t, const networkbase& net, int turn)
+double evaluate(const tavla& t, const evaluatorbase& net, int turn)
 {
     if (t.is_end())
     {
@@ -20,7 +20,7 @@ double evaluate(const tavla& t, const networkbase& net, int turn)
     return out;
 }
 
-tavla choose_next(tavla tav, const networkbase& net, int d1, int d2)
+tavla choose_next(tavla tav, const evaluatorbase& net, int d1, int d2)
 {
     std::vector<tavla> vec;
     tav.next_states(d1, d2, vec);
@@ -67,7 +67,7 @@ void update_net(const tavla& tav, double val, network& net, int turn = 0)
 
 void learn_game(network& net)
 {
-    network_random dumb;
+    random_evaluator dumb;
     tavla tav;
     
     tavla prew;

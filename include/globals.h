@@ -1,5 +1,4 @@
-#ifndef GLOBALSH
-#define GLOBALSH
+#pragma once
 
 #include <cstdio>
 #include <iostream>
@@ -8,5 +7,3 @@
 #include "serialize.h"
 
 #define NOMINMAX
-
-#endif

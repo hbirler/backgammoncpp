@@ -1,75 +1,115 @@
 #include "test.h"
 
-test_result::test_result(double w, double b)
+using namespace std;
+
+bool test_learning(bool log, double testval, double eta, double decay, double eps, int length)
 {
-    this->white = w;
-    this->black = b;
-    this->avg = (w+b)/2.0;
+	tavla tav;
+	double inp[INSIZE];
+	tav.to_vector(inp);
+	network net(eta, decay);
+	for (int i = 0; i < length; i++)
+	{
+		net.update(inp, testval);
+		if (log && i % 100 == 0)
+		{
+			double out = net.evaluate(inp);
+			printf("%lf\n", out);
+		}
+	}
+
+	double out = net.evaluate(inp);
+	if (out - testval < eps)
+		return true;
+	else
+		return false;
+}
+
+bool test_deviation(bool log, double minst, int length)
+{
+	tavla tav;
+	network net;
+	double inp[INSIZE];
+	tav.to_vector(inp);
+
+	double* result = new double[length];
+	double sum = 0.0;
+
+	for (int i = 0; i < length; i++)
+	{
+		net = network(0.01, 0.7);
+		double out = net.evaluate(inp);
+		result[i] = out;
+		sum += out;
+		if (log)
+			printf("%lf\n", out);
+	}
+
+	double avg = sum / length;
+	double dev = 0.0;
+
+	for (int i = 0; i < length; i++)
+	{
+		dev += (result[i] - avg) * (result[i] - avg);
+	}
+
+	dev = sqrt(dev);
+
+	delete result;
+
+	if (dev < minst)
+		return false;
+	else
+		return true;
 }
 
 
-tester::tester(std::ostream* os, bool tolog)
+
+test::test(const function<bool()>& foo, const string& name, const string& parameters)
 {
-    this->tolog = tolog;
-    this->out = os;
+	this->foo = foo;
+	this->name = name;
+	this->parameters = parameters;
+}
+test::~test() {}
+
+test default_tests[] = {
+	test([]() -> bool { return test_learning(false, 0.33); }, "Learning", "val=0.33"),
+	test([]() -> bool { return test_learning(false, 0.2); }, "Learning", "val=0.2"),
+	test([]() -> bool { return test_learning(false, 0.8); }, "Learning", "val=0.8"),
+	test([]() -> bool { return test_deviation(false); }, "Deviation")
+};
+
+bool run_tests()
+{
+	return run_tests(default_tests, sizeof(default_tests) / sizeof(test));
 }
 
-tester::~tester()
+bool run_tests(test tests[], int size)
 {
-    
+	bool retval = true;
+	for (int i = 0; i < size; i++)
+	{
+		cout << "Test #" << i << "  " << tests[i].name << " ( " << tests[i].parameters << " ) ...\t";
+		bool result = tests[i].foo();
+		if (result == true)
+		{
+			cout << "SUCCEEDED" << endl;
+		}
+		else
+		{
+			cout << "FAILED" << endl;
+		}
+		retval = retval && result;
+	}
+	return retval;
 }
 
-int tester::test_game(const networkbase& w, const networkbase& b)
+int main_test()
 {
-    tavla tav;
-    
-    while (!tav.is_end())
-    {
-        int d1, d2;
-        roll(&d1, &d2);
-        if (tav.turn == WHITE)
-            tav = choose_next(tav, w, d1, d2);
-        else
-            tav = choose_next(tav, b, d1, d2);
-    }
-    return tav.get_winner();
-}
-
-void tester::log(const test_result& result, int netno)
-{
-    *(this->out) << std::fixed << std::setprecision(2);
-    *(this->out) << "Test Result: ";
-    if (netno > 0)
-        *(this->out) << "#" << netno << " ";
-    *(this->out) << std::setprecision(2) << result.white << " " << result.black << "\t" << result.avg;
-    *(this->out) << std::endl;
-    
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << "\t-Test Result: ";
-    if (netno > 0)
-        std::cout << "#" << netno << " ";
-    std::cout << std::setprecision(2) << result.white << " " << result.black << "\t" << result.avg;
-    std::cout << std::endl; 
-}
-
-test_result tester::test_network(const networkbase& net, int numw, int numb, int netno)
-{
-    network_random dumb;
-    int wwin = 0, bwin = 0;
-    for (int i = 0; i < numw; i++)
-    {
-        wwin += test_game(net, dumb) == WHITE;
-    }
-    
-    for (int i = 0; i < numb; i++)
-    {
-        bwin += test_game(dumb, net) == BLACK;
-    }
-    
-    test_result res(wwin*1.0/numw, bwin*1.0/numb);
-    
-    if (this->tolog)
-        log(res, netno);
-    
-    return res;
+	bool result = run_tests();
+	if (result == true)
+		exit(EXIT_SUCCESS);
+	else
+		exit(EXIT_FAILURE);
 }

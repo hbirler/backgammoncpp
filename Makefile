@@ -20,7 +20,7 @@ CFLAGS := -std=c++11 -g -O2 # -Wall
 LIB := # 
 INC := -I include
 
-all: $(TARGET) directories
+all: $(TARGET) directories test
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
@@ -46,11 +46,15 @@ cleanout:
 	@mkdir -p $(REQDIRS)
 
 # Tests
-tester:
-	$(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
+
+test: $(TARGET)
+	$(TARGET) test
+
+#tester:
+#	$(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
 
 # Spikes
-ticket:
-	$(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
+#ticket:
+#	$(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
 
 .PHONY: clean directories

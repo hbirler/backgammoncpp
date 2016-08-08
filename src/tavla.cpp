@@ -96,8 +96,8 @@ std::string tavla::str()  const
     
     for (int i = 0; i < 13; i++)
         os << "#";
-    os << "W" << checkers[0][0] << ":" << checkers[0][25] << " " <<
-          "B" << checkers[1][0] << ":" << checkers[1][25] << endl;
+    os << "W" << (int)checkers[0][0] << ":" << (int)checkers[0][25] << " " <<
+          "B" << (int)checkers[1][0] << ":" << (int)checkers[1][25] << endl;
     
     
     
@@ -109,12 +109,12 @@ std::string tavla::str()  const
         {
             if (i == 6)
                 os << "#";
-            if (checkers[0][13+i] >= k)
+            if ((int)checkers[0][13+i] >= k)
             {
                 os << "W";
                 tob = false;
             }
-            else if (checkers[1][12-i] >= k)
+            else if ((int)checkers[1][12-i] >= k)
             {
                 os << "B";
                 tob = false;
@@ -128,11 +128,11 @@ std::string tavla::str()  const
             break;
     }
     
-    char mmax = 0;
+    int mmax = 0;
     for (int i = 1; i <= 12; i++)
     {
-        mmax = max(mmax, checkers[0][i]);
-        mmax = max(mmax, checkers[1][25-i]);
+        mmax = max(mmax, (int)checkers[0][i]);
+        mmax = max(mmax, (int)checkers[1][25-i]);
     }
     
     for (int k = mmax; k > 0; k--)
@@ -141,9 +141,9 @@ std::string tavla::str()  const
         {
             if (i == 6)
                 os << "#";
-            if (checkers[0][12-i] >= k)
+            if ((int)checkers[0][12-i] >= k)
                 os << "W";
-            else if (checkers[1][13+i] >= k)
+            else if ((int)checkers[1][13+i] >= k)
                 os << "B";
             else
                 os << " ";
@@ -277,9 +277,7 @@ void tavla::to_vector(double output[INSIZE], bool flip) const
     {
         for (int k = 0; k < checkers[flip][i+1]; k++)
         {
-            //printf("%d\n",checkers[flip][i+1]);
             output[i*8 + k] = (k<3)?1.0:(checkers[flip][i+1]-3)/2.0;
-            //printf("%lf\n",output[i*8 + k]);
         }
         for (int k = 0; k < checkers[!flip][i+1]; k++)
         {
@@ -289,8 +287,8 @@ void tavla::to_vector(double output[INSIZE], bool flip) const
     }
     output[192] = checkers[flip][25] / 2.0;
     output[193] = checkers[!flip][25] / 2.0;
-    output[194] = checkers[flip][0] / 15.0;
-    output[195] = checkers[!flip][0] / 15.0;
+    output[194] = checkers[flip][0] / 16.0;
+    output[195] = checkers[!flip][0] / 16.0;
     output[196] = turn == flip;
     output[197] = turn == !flip;
 }

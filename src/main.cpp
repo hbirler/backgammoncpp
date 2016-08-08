@@ -7,45 +7,45 @@ inline bool file_exists(const std::string& name) {
 	return f.good();
 }
 
-int main()
+void run_learning();
+void run_businessman();
+
+
+int main(int argc, char *argv[])
 {
-    network net(0.1, 0.7);
+	if (argc > 1 && strcmp(argv[1], "test") == 0)
+	{
+		return main_test();
+	}
+
+
+	run_businessman();
+	//run_learning();
+
+	system("pause");
+    
+    return 0;
+}
+
+
+void run_businessman()
+{
+	nettest tester(&cout);
+	buzinessman net;
+
+
+	cout << "Testing Businessman" << endl;
+	tester.test_network(net, 50, 50, 0);
+}
+
+
+void run_learning()
+{
+	network net(0.1, 0.7);
 	ofstream testout;
 	testout.open("./output/testout.txt", ios::out | ios::app);
-    tester test(&testout);
-    
-    /*tavla tot;
-    double inp[INSIZE];
-    tot.to_vector(inp);
-    network noto(0.01, 0.7);
-    for (int i = 0; i < 10000;i++)
-    {
-        noto.update(inp, 0.33);
-        if (i % 100 == 0)
-        {
-            double out = noto.evaluate(inp);
-            printf("%lf\n", out);
-        }
-    }
-    int a;
-    cin>>a;*/
-    
-    
-    /*tavla tot;
-    double inp[INSIZE];
-    tot.to_vector(inp);
-    for (int i = 0; i<100;i++)
-    {
-        net = network(0.01, 0.7, 5);
-        double out = net.evaluate(inp);
-        printf("%lf\n", out);
-    }
-    int a;
-    cin>>a;
-    
-    net = network(0.01, 0.7, 5);*/
-    
-    //return 0;
+	nettest tester(&testout);
+
 
 	int ind = 0;
 
@@ -57,38 +57,36 @@ int main()
 		ind = net.no;
 		cout << "Loaded network... #" << ind << endl;
 	}
-    
-    cout << std::fixed << std::setprecision(2);
-    
-    clock_t begin = clock();
-    for (ind;  ; ind++)
-    {
+
+	cout << std::fixed << std::setprecision(2);
+
+	clock_t begin = clock();
+	for (ind; ; ind++)
+	{
 		net.no = ind;
-        
-        if (ind % 100 == 0)
-        {
-            clock_t end = clock();
+
+		if (ind % 100 == 0)
+		{
+			clock_t end = clock();
 			double elapsed_secs = (double)(end - begin) / CLOCKS_PER_SEC;
-            cout << setw(8) << left << ind << " " << elapsed_secs << endl;
-        }
-        
-        if (ind % 1000 == 0)
-        {
+			cout << setw(8) << left << ind << " " << elapsed_secs << endl;
+		}
+
+		if (ind % 1000 == 0)
+		{
 			cout << "\tTesting network..." << endl;
-            test.test_network(net, 50, 50, ind);
-			
+			tester.test_network(net, 50, 50, ind);
+
 			cout << "\tSaving network...";
 			serialize<network>(netpath, net);
 			cout << " Saved" << endl;
-        }
+		}
 
 
 		learn_game(net);
-    }
-    
-    
-    int qwer;
-    cin>>qwer;
-    
-    return 0;
+	}
+
+
+	//int qwer;
+	//cin >> qwer;
 }
