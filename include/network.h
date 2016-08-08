@@ -61,6 +61,7 @@ public:
 	double evaluate(const double input[INSIZE]) const;
 	double evaluate(const double input[INSIZE], double hidz[HIDSIZE], double* outz) const;
 	void update(const double input[INSIZE], double output);
+	void set_eta(double neta);
 	int no;
 	bool operator==(const network& other) const ;
 private:
