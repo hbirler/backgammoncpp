@@ -11,7 +11,8 @@
 #include <cstdio>
 #include <algorithm>
 #include <random>
-#include <stdint.h>
+#include <cstdint>
+#include <iomanip>
 #include "myrandom.h"
 
 
@@ -43,6 +44,7 @@ public:
     bool is_end()  const;
     int get_winner()  const;
     std::string str()  const;
+	std::string str_pretty()  const;
     void next_states(int d1, int d2, std::vector<tavla>& vec) const;
     void next_die(int d1, std::unordered_set<tavla>& stav) const;
     bool operator<(const tavla& rhs) const ;

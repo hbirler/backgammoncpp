@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tavl</title>
+</head>
+<body>
+
+<code id="data"></code> <br/>
+<input id="input" type="text"/>
+
+<h3>Nasıl oynanır?</h3>
+<ul>
+	<li>W -> beyaz</li>
+	<li>B -> siyah</li>
+	<li>Sağ üstteki sayılar -> Çıkarılan Taş:Kırık Taş</li>
+	<li>Hamle -> Taşları nereden nereye oynamak istediğinizi yazıyorsunuz. Tüm turunuzu tek seferde yazmanız gerekli</li>
+	<li>Örnek hamle -> "5 3 7 2" -> 5'teki taşı 3'e, 7'deki taşı 2'ye koy</li>
+	<li>Hamle yapamıyorsan -> "5 5" -> Taşı alıp aynı yere geri koy lel</li>
+	<li>Kırık taşı sokma -> "25 23" -> Kırık taşlar 25'te</li>
+	<li>Taş alma -> "3 0" -> Alınan taşlar 0'a</li>
+</ul>
+
+
+<script>
+window.game = null;
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+function getPlay()
+{
+	inpval = document.getElementById("input").value;
+	document.getElementById("input").value = "Loading...";
+	document.getElementById("input").focus();
+	function callback(response)
+	{
+		var fent = response.indexOf("\n");
+		var pres = response.slice(fent);
+		window.game = response.slice(0, fent + 1);
+		document.getElementById("data").innerHTML = pres.replaceAll("\n","<br/>").replaceAll(" ","&nbsp;");
+		document.getElementById("input").value = "";
+		document.getElementById("input").focus();
+	}
+	var url = "/play?";
+	if (window.game != null)
+	{
+		url += "game=" + window.game;
+		url += "&dice=" + inpval.split(" ").join(",");
+	}
+	
+	
+	
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", url, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+getPlay();
+document.getElementById("input").addEventListener("keydown", function(e) {
+	if (!e) { var e = window.event; }
+	 // sometimes useful
+
+	// Enter is pressed
+	if (e.keyCode == 13) { 
+		e.preventDefault();
+		getPlay(); 
+	}
+}, false);
+	
+</script>
+
+</body>
+</html>

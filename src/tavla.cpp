@@ -103,6 +103,86 @@ int tavla::get_winner()  const
         return BLACK;
     
 }
+std::string tavla::str_pretty()  const
+{
+	using namespace std;
+	ostringstream os;
+	//os << endl << hash<tavla>()(*this) << endl;
+
+	for (int i = 0; i < 6; i++)
+		os << setw(3) << 13 + i << "|";
+	os << "       |";
+	for (int i = 6; i < 12; i++)
+		os << setw(3) << 13 + i << "|";
+	os << endl;
+	for (int i = 0; i < 14; i++)
+		os << "###|";
+	os << "W" << (int)checkers[0][0] << ":" << (int)checkers[0][25] << " " <<
+		"B" << (int)checkers[1][0] << ":" << (int)checkers[1][25] << endl;
+
+
+
+	for (int k = 1; ; k++)
+	{
+		bool tob = true;
+
+		for (int i = 0; i < 12; i++)
+		{
+			if (i == 6)
+				os << "#######|";
+			if ((int)checkers[0][13 + i] >= k)
+			{
+				os << " W |";
+				tob = false;
+			}
+			else if ((int)checkers[1][12 - i] >= k)
+			{
+				os << " B |";
+				tob = false;
+			}
+			else
+				os << "   |";
+		}
+
+		os << endl;
+		if (tob)
+			break;
+	}
+
+	int mmax = 0;
+	for (int i = 1; i <= 12; i++)
+	{
+		mmax = max(mmax, (int)checkers[0][i]);
+		mmax = max(mmax, (int)checkers[1][25 - i]);
+	}
+
+	for (int k = mmax; k > 0; k--)
+	{
+		for (int i = 0; i < 12; i++)
+		{
+			if (i == 6)
+				os << "#######|";
+			if ((int)checkers[0][12 - i] >= k)
+				os << " W |";
+			else if ((int)checkers[1][13 + i] >= k)
+				os << " B |";
+			else
+				os << "   |";
+		}
+		os << endl;
+	}
+	for (int i = 0; i < 14; i++)
+		os << "###|";
+	os << ((turn == WHITE) ? "W" : "B");
+	os << endl;
+	for (int i = 0; i < 6; i++)
+		os << setw(3) << 12 - i << "|";
+	os << "       |";
+	for (int i = 6; i < 12; i++)
+		os << setw(3) << 12 - i << "|";
+	os << endl;
+	return os.str();
+}
 std::string tavla::str()  const
 {
     using namespace std;
