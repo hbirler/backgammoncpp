@@ -1,6 +1,5 @@
 #include "learn.h"
 
-const int LRATE = 0.7;
 
 double evaluate(const tavla& t, const evaluatorbase& net, int turn)
 {
