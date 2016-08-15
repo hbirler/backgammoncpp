@@ -69,6 +69,10 @@ def run_play(params):
 @app.route("/")
 def hello():
 	return render_template('index.htm')
+
+@app.route("/test")
+def hello():
+	return send_from_directory('output', 'testout.txt')
 	
 @app.route("/weights")
 @crossdomain(origin='*')
