@@ -66,8 +66,8 @@ clean:
 
 cleanout:
 	@echo " Cleaning..."; 
-	#@echo " $(RM) -r $(REQDIRS)"; $(RM) -r $(REQDIRS)
-	#@mkdir -p $(REQDIRS)
+	@echo " $(RM) -r $(REQDIRS)"; $(RM) -r $(REQDIRS)
+	@mkdir -p $(REQDIRS)
 
 # Tests
 
