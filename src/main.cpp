@@ -260,13 +260,13 @@ void run_learning()
 				prent = loadnet(nind);
 
 			cout << "\tTesting network against prent..." << endl;
-			auto tprent = tester.test_network(net, 25, 25, ind, false, "prent");
+			auto tprent = tester.test_network(net, 100, 100, ind, false, "prent");
 			cout << "\tTesting network against buzir..." << endl;
-			auto tbuzir = tester.test_network(net, 25, 25, ind, true, "buzir");
+			auto tbuzir = tester.test_network(net, 100, 100, ind, true, "buzir");
 			cout << "\tTesting network against buzin..." << endl;
-			auto tbuzin = tester.test_network(net, 25, 25, ind, true, "buzin");
+			auto tbuzin = tester.test_network(net, 100, 100, ind, true, "buzin");
 			cout << "\tTesting network against randm..." << endl;
-			auto trandm = tester.test_network(net, 25, 25, ind, false, "randm");
+			auto trandm = tester.test_network(net, 100, 100, ind, false, "randm");
 
 			map<string, double> data = { {"ind",ind}, {"eta",eta}, {"pre_ind",nind},
 			{"train_rate_buzi", busyrate }, { "train_rate_buzi_rand", randbusyrate }, { "train_rate_buzi_norm", normbusyrate }, { "train_rate_pre",prerate },
