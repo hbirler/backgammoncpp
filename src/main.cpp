@@ -96,7 +96,7 @@ network loadnet(int ind)
 	network net;
 	string netpath = "./output/";
 	int net_ind;
-	if (file_exists(netpath + "network.bin"))
+	if (file_exists(netpath + "net-" + to_string(ind) + ".bin"))
 	{
 		net = deserialize<network>(netpath + "net-" + to_string(ind) + ".bin");
 		net_ind = net.no;
@@ -208,18 +208,27 @@ void run_learning()
 	string netpath = "./output/";
 
 	ofstream testout;
-	testout.open("./output/testout.txt", ios::out | ios::app);
-	nettest tester(&testout);
-
+	testout.open("./output/testlog.jsonl", ios::out | ios::app);
+	//nettest tester(&testout, false);
+	nettest tester(&cout);
+	logger mylog(&testout);
 
 	int ind = 0;
 
 	network net = loadnet();
+	ind = net.no;
 
 	double ws[INSIZE + 3][HIDSIZE];
+
+	int randbusylearn = 0;
+	int normbusylearn = 0;
+	int prelearn = 0;
+	int selflearn = 0;
 	
 
 	cout << std::fixed << std::setprecision(2);
+
+	network prent = loadnet();
 
 	clock_t begin = clock();
 	for (ind; ; ind += 2)
@@ -238,6 +247,8 @@ void run_learning()
 			clock_t end = clock();
 			double elapsed_secs = (double)(end - begin) / CLOCKS_PER_SEC;
 			cout << setw(8) << left << ind << " " << elapsed_secs << endl;
+			cout << "*" << randbusylearn << " " << normbusylearn << " " << prelearn << " " << selflearn << endl;
+			cout << "#" << busyrate << " " << randbusyrate << " " << normbusyrate << " " << prerate << " " << eta << endl;
 		}
 
 		if (ind % 1000 == 0)
@@ -245,16 +256,27 @@ void run_learning()
 			buzinessman buzir(true);
 			buzinessman buzin(false);
 			int nind = ind / 4 * 3 / 1000 * 1000;
-			network prent = loadnet(nind);
+			if (prent.no != nind)
+				prent = loadnet(nind);
 
 			cout << "\tTesting network against prent..." << endl;
-			tester.test_network(net, 25, 25, ind, false, "prent");
+			auto tprent = tester.test_network(net, 25, 25, ind, false, "prent");
 			cout << "\tTesting network against buzir..." << endl;
-			tester.test_network(net, 25, 25, ind, true, "buzir");
+			auto tbuzir = tester.test_network(net, 25, 25, ind, true, "buzir");
 			cout << "\tTesting network against buzin..." << endl;
-			tester.test_network(net, 25, 25, ind, true, "buzin");
+			auto tbuzin = tester.test_network(net, 25, 25, ind, true, "buzin");
 			cout << "\tTesting network against randm..." << endl;
-			tester.test_network(net, 25, 25, ind, false, "randm");
+			auto trandm = tester.test_network(net, 25, 25, ind, false, "randm");
+
+			map<string, double> data = { {"ind",ind}, {"eta",eta}, {"pre_ind",nind},
+			{"train_rate_buzi", busyrate }, { "train_rate_buzi_rand", randbusyrate }, { "train_rate_buzi_norm", normbusyrate }, { "train_rate_pre",prerate },
+			{ "train_rate_self", 1-(busyrate + prerate) },
+			{ "test_pre_avg", tprent.avg },{ "test_pre_white",tprent.white },{ "test_pre_black",tprent.black },
+			{ "test_buzi_rand_avg", tbuzir.avg },{ "test_buzi_rand_white",tbuzir.white },{ "test_buzi_rand_black",tbuzir.black },
+			{ "test_buzi_norm_avg", tbuzin.avg },{ "test_buzi_norm_white",tbuzin.white },{ "test_buzi_norm_black",tbuzin.black },
+			{ "test_rand_avg", trandm.avg },{ "test_rand_white",trandm.white },{ "test_rand_black",trandm.black }};
+
+			mylog.log(data);
 
 			cout << "\tSaving network...";
 			serialize<network>(netpath + "net-" + to_string(ind) + ".bin", net);
@@ -270,23 +292,28 @@ void run_learning()
 
 			if (todo < randbusyrate)
 			{
+				randbusylearn++;
 				buzinessman buzi(true);
 				learn_game(net, buzi);
 				learn_game(buzi, net);
 			}
 			else {
+				normbusylearn++;
 				buzinessman buzi(false);
 				learn_game(net, buzi);
 				learn_game(buzi, net);
 			}
 		}
 		else if (todo < busyrate + prerate) {
+			prelearn++;
 			int nind = ind / 4 * 3 / 1000 * 1000;
-			network other = loadnet(nind);
-			learn_game(net, other);
-			learn_game(other, net);
+			if (prent.no != nind)
+				prent = loadnet(nind);
+			learn_game(net, prent);
+			learn_game(prent, net);
 		}
 		else {
+			selflearn++;
 			learn_game(net, net);
 			learn_game(net, net);
 		}

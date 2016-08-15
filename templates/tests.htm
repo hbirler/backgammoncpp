@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html style="width: 100%; height: 100%;">
+<head>
+	<title></title>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body style="width: 100%; height: 100%;">
+<div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+<script type="text/javascript">
+
+
+
+function getData(){
+	
+	
+	var client = new XMLHttpRequest();
+	client.open('GET', '/logdata');
+	client.onreadystatechange = function() {
+		data = [];
+		cdata = [];
+		dataind = {};
+		if (client.readyState != 4 || client.status != 200 || !client.responseText)
+    		return;
+		var text = client.responseText;
+		var lpos = 0;
+		
+		for (var i = 0;i<text.length;i++)
+		{
+			if (text[i] == "\n"){
+				data.push(JSON.parse(text.substring(lpos, i)));
+				lpos = i+1;
+				
+				if (data.length == 1){
+					for (var key in data[0]){
+						cdata.push({name:key,mode: 'lines', y:[], x:[]});
+						dataind[key] = cdata.length-1;
+					}
+				}
+				
+				for (var key in data[data.length-1]){
+					var val = data[data.length-1][key];
+					cdata[dataind[key]].y.push(val);
+					cdata[dataind[key]].x.push(data[data.length-1]["ind"]);
+				}
+				
+			}
+		}
+		
+		window["cdata"] = cdata;
+		setupChart();
+	}
+	client.send();
+}
+
+function setupChart(){
+	Plotly.newPlot('myDiv', window["cdata"]);
+}
+
+getData();
+
+
+	
+</script>
+
+</body>
+</html>

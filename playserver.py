@@ -73,6 +73,14 @@ def hello():
 @app.route("/test")
 def testview():
 	return send_from_directory('output', 'testout.txt')
+
+@app.route("/logdata")
+def logdataview():
+	return send_from_directory('output', 'testlog.jsonl', mimetype='text/json')
+	
+@app.route("/log")
+def logview():
+	return render_template('tests.htm')
 	
 @app.route("/weights")
 @crossdomain(origin='*')

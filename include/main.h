@@ -13,3 +13,4 @@
 #include "test.h"
 #include "buzinessman.h"
 #include "play.h"
+#include "logger.h"
