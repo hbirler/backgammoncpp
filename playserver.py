@@ -71,7 +71,7 @@ def hello():
 	return render_template('index.htm')
 
 @app.route("/test")
-def hello():
+def testview():
 	return send_from_directory('output', 'testout.txt')
 	
 @app.route("/weights")
