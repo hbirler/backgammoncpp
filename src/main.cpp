@@ -19,7 +19,7 @@ double easy_eval(const tavla& t, const network& net, int turn) {
 
 void my_test() {
 	network net;
-	string netpath = "C:\\git\\tavlacpp\\output\\";
+	string netpath = "./output/";
 	int net_ind;
 	if (file_exists(netpath + "network.bin"))
 	{
@@ -80,7 +80,7 @@ tavla fromstr(string ms)
 network loadnet()
 {
 	network net;
-	string netpath = "C:\\git\\tavlacpp\\output\\";
+	string netpath = "./output/";
 	int net_ind;
 	if (file_exists(netpath + "network.bin"))
 	{
@@ -94,13 +94,13 @@ network loadnet()
 network loadnet(int ind)
 {
 	network net;
-	string netpath = "C:\\git\\tavlacpp\\output\\";
+	string netpath = "./output/";
 	int net_ind;
 	if (file_exists(netpath + "network.bin"))
 	{
 		net = deserialize<network>(netpath + "net-" + to_string(ind) + ".bin");
 		net_ind = net.no;
-		//cout << "Loaded network... #" << net_ind << endl;
+		cout << "Loaded network... #" << net_ind << endl;
 	}
 	return net;
 }
@@ -164,7 +164,7 @@ void test_my_network(const network& net)
 void export_network()
 {
 	network net;
-	string netpath = "C:\\git\\tavlacpp\\output\\";
+	string netpath = "./output/";
 	int net_ind;
 	if (file_exists(netpath + "network.bin"))
 	{
@@ -181,7 +181,7 @@ void export_network()
 
 	double ws[INSIZE + 3][HIDSIZE];
 	net.export_weights(ws);
-	serialize("C:\\git\\tavlacpp\\output\\weights.bin", ws);
+	serialize("./output/weights.bin", ws);
 	//string output = encode_16(ws);
 	//cout << endl << output << endl;
 	cout << "Serialization succeeded." << endl;
