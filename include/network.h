@@ -62,6 +62,7 @@ public:
 	double evaluate(const double input[INSIZE], double hidz[HIDSIZE], double* outz) const;
 	void update(const double input[INSIZE], double output);
 	void set_eta(double neta);
+	void export_weights(double ws[INSIZE + 1][HIDSIZE]);
 	int no;
 	bool operator==(const network& other) const ;
 private:

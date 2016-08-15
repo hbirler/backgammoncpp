@@ -49,7 +49,7 @@ int nettest::test_game(const evaluatorbase& w, const evaluatorbase& b)
     return tav.get_winner();
 }
 
-void nettest::log(const test_result& result, int netno)
+void nettest::log(const test_result& result, int netno, std::string note)
 {
 	if (this->out != NULL && this->out != &std::cout)
 	{
@@ -57,6 +57,7 @@ void nettest::log(const test_result& result, int netno)
 		*(this->out) << "Test Result: ";
 		if (netno > 0)
 			*(this->out) << "#" << netno << " ";
+		*(this->out) << note << " ";
 		*(this->out) << std::setprecision(2) << result.white << " " << result.black << "\t" << result.avg;
 		*(this->out) << std::endl;
 	}
@@ -69,28 +70,37 @@ void nettest::log(const test_result& result, int netno)
     std::cout << std::endl; 
 }
 
-test_result nettest::test_network(const evaluatorbase& net, int numw, int numb, int netno, bool buzi)
+test_result nettest::test_network(const evaluatorbase& net, int numw, int numb, int netno, const evaluatorbase& other, std::string note)
+{
+
+	int wwin = 0, bwin = 0;
+	for (int i = 0; i < numw; i++)
+	{
+		int result = test_game(net, other);
+		wwin += result == WHITE;
+	}
+
+	for (int i = 0; i < numb; i++)
+	{
+		int result = test_game(other, net);
+		bwin += result == BLACK;
+	}
+
+	test_result res(wwin*1.0 / numw, bwin*1.0 / numb);
+
+	if (this->tolog)
+		log(res, netno, note);
+
+	return res;
+}
+
+test_result nettest::test_network(const evaluatorbase& net, int numw, int numb, int netno, bool buzi, std::string note)
 {
 	random_evaluator dumb;
 	buzinessman buzy;
 
-    int wwin = 0, bwin = 0;
-    for (int i = 0; i < numw; i++)
-    {
-		int result = buzi? test_game(net, buzy):test_game(net, dumb);
-        wwin += result == WHITE;
-    }
-    
-    for (int i = 0; i < numb; i++)
-    {
-		int result = buzi ? test_game(buzy, net) : test_game(dumb, net);
-        bwin += result == BLACK;
-    }
-    
-    test_result res(wwin*1.0/numw, bwin*1.0/numb);
-    
-    if (this->tolog)
-        log(res, netno);
-    
-    return res;
+	if (!buzi)
+		return test_network(net, numw, numb, netno, dumb, note);
+	else
+		return test_network(net, numw, numb, netno, buzy, note);
 }

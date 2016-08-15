@@ -89,6 +89,27 @@ void network::set_eta(double neta)
 {
 	this->eta = neta;
 }
+void network::export_weights(double ws[INSIZE + 3][HIDSIZE])
+{
+	for (int i = 0; i < INSIZE; i++)
+		for (int k = 0; k < HIDSIZE; k++)
+		{
+			ws[i][k] = weights0[i][k];
+		}
+	for (int k = 0; k < HIDSIZE; k++)
+	{
+		ws[INSIZE][k] = weights1[k];
+	}
+	for (int k = 0; k < HIDSIZE; k++)
+	{
+		ws[INSIZE + 1][k] = biases0[k];
+	}
+	for (int k = 0; k < HIDSIZE; k++)
+	{
+		ws[INSIZE + 2][k] = 0.0;
+	}
+	ws[INSIZE + 2][0] = biases1;
+}
 double network::evaluate(const double input[INSIZE]) const
 {
     double hidz[HIDSIZE];// = {0.0}

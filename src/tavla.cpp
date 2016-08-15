@@ -270,7 +270,7 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec) const
     }
     else
     {
-        this->next_die(d1, s0);
+        /*this->next_die(d1, s0); //BUG 3 5 and 5 3 different
         for (auto& t:s0)
             t.next_die(d2, s1);
 		if (!s1.empty())
@@ -287,7 +287,25 @@ void tavla::next_states(int d1, int d2, std::vector<tavla>& vec) const
 			for (auto& t : s1)
 				s0.insert(t);
 		}
-        s1.clear();
+        s1.clear();*/
+
+		this->next_die(d1, s0); //BUG 3 5 and 5 3 different
+		for (auto& t : s0)
+			t.next_die(d2, s1);
+		if (!s1.empty())
+			swap(s0, s1);
+		s1.clear();
+
+		std::unordered_set<tavla> s2, s3;
+
+		this->next_die(d2, s2); //BUG 3 5 and 5 3 different
+		for (auto& t : s2)
+			t.next_die(d1, s3);
+		if (!s3.empty())
+			swap(s2, s3);
+		s3.clear();
+		for (auto& t : s2)
+			s0.insert(t);
     }
     if (s0.empty())
     {

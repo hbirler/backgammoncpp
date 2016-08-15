@@ -21,8 +21,8 @@ std::string encode_16(const char * data, int length)
 	std::string retval(length * 2, '0');
 	for (int i = 0; i < length; i++)
 	{
-		retval[i * 2] = encoding_table[data[i] >> (char)4];
-		retval[i * 2 + 1] = encoding_table[data[i] & 15];
+		retval[i * 2] = encoding_table[(unsigned char)data[i] >> 4];
+		retval[i * 2 + 1] = encoding_table[(unsigned char)data[i] & 15];
 	}
 	retval[length * 2] = 0;
 
