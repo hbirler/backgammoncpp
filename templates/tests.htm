@@ -33,7 +33,7 @@ function getData(){
 				
 				if (data.length == 1){
 					for (var key in data[0]){
-						cdata.push({name:key,mode: 'lines', y:[], x:[]});
+						cdata.push({name:key,line: {shape: 'spline'},mode: 'lines', y:[], x:[]});
 						dataind[key] = cdata.length-1;
 					}
 				}
