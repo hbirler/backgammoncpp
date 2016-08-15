@@ -205,7 +205,7 @@ void run_learning()
 {
 	//network net(0.1, 0.7);
 	//buzinessman buzi;
-	string netpath = "C:\\git\\tavlacpp\\output\\";
+	string netpath = "./output/";
 
 	ofstream testout;
 	testout.open("./output/testout.txt", ios::out | ios::app);
@@ -216,7 +216,7 @@ void run_learning()
 
 	network net = loadnet();
 
-	
+	double ws[INSIZE + 3][HIDSIZE];
 	
 
 	cout << std::fixed << std::setprecision(2);
@@ -259,6 +259,9 @@ void run_learning()
 			cout << "\tSaving network...";
 			serialize<network>(netpath + "net-" + to_string(ind) + ".bin", net);
 			serialize<network>(netpath + "network.bin", net);
+
+			net.export_weights(ws);
+			serialize("./output/weights.bin", ws);
 			cout << " Saved" << endl;
 		}
 
