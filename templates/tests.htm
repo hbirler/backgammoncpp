@@ -84,7 +84,7 @@ function MovingAverage (data, size, weights)
 function processData(cdata){
 	for (var ind in cdata) {
 		var ys = cdata[ind].y;
-		cdata[ind].y = MovingAverage(ys,4, [1/8,1/4,1/4,1/8]);
+		cdata[ind].y = MovingAverage(ys,4, [1/8,1/4,1/4,1/4,1/8]);
 	}
 	return cdata;
 }
