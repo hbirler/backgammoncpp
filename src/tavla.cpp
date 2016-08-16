@@ -434,25 +434,17 @@ void tavla::to_vector(double output[INSIZE], bool flip) const
 }
 bool tavla::operator<(const tavla& other) const 
 {
-    for (int i = 0; i < 26; i++)
-    {
-        if (this->checkers[i] < other.checkers[i])
-            return true;
-    }
-    if (this->turn < other.turn)
-        return true;
+	if (std::memcmp(this->checkers, other.checkers, sizeof(this->checkers)) >= 0)
+		return false;
+    if (this->turn >= other.turn)
+        return false;
     
-    return false;
+    return true;
 }
 bool tavla::operator==(const tavla& other) const 
 {
-    for (int i = 0; i < 26; i++)
-    {
-        if (this->checkers[0][i] != other.checkers[0][i])
-            return false;
-        if (this->checkers[1][i] != other.checkers[1][i])
-            return false;
-    }
+	if (std::memcmp(this->checkers, other.checkers, sizeof(this->checkers)) != 0)
+		return false;
     if (this->turn != other.turn)
         return false;
     return true;

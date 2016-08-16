@@ -2,15 +2,7 @@
 
 
 
-double sigmoid(double z)
-{
-    return 1.0/(1.0+exp(-z));
-}
 
-double sigmoid_prime(double z)
-{
-    return sigmoid(z)*(1-sigmoid(z));
-}
 
 
 evaluatorlambda::evaluatorlambda(const std::function<double(const double[INSIZE])>& eval, const std::function<void(const double[INSIZE], double output)>& updt)
@@ -112,13 +104,32 @@ void network::export_weights(double ws[INSIZE + 3][HIDSIZE])
 }
 double network::evaluate(const double input[INSIZE]) const
 {
-    double hidz[HIDSIZE];// = {0.0}
-    double outz = 0.0;
-    return evaluate(input, hidz, &outz);
+	static double hidden[HIDSIZE] = { 0.0 };
+	double output = 0.0;
+
+	for (int i = 0; i < HIDSIZE; i++)
+	{
+		double mval = 0.0;
+		for (int k = 0; k < INSIZE; k++)
+			mval += input[k] * weights0[k][i];
+		mval += biases0[i];
+		hidden[i] = sigmoid(mval);
+	}
+
+	{
+		double mval = 0.0;
+		for (int k = 0; k < HIDSIZE; k++)
+			mval += hidden[k] * weights1[k];
+		mval += biases1;
+		output = sigmoid(mval);
+	}
+
+
+	return output;
 }
 double network::evaluate(const double input[INSIZE], double hidz[HIDSIZE], double* outz) const
 {
-    double hidden[HIDSIZE] = {0.0};
+    static double hidden[HIDSIZE] = {0.0};
     double output = 0.0;
     
     for (int i = 0; i < HIDSIZE; i++)

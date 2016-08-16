@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 	//my_test2();
 	//export_network();
 
-	system("pause");
+	auto ret = system("pause");
     
     return 0;
 }
@@ -234,11 +234,11 @@ void run_learning()
 	clock_t begin = clock();
 	for (ind; ; ind += 2)
 	{
-		double busyrate = exp(-ind / 65536.0);
+		double busyrate = exp(-ind / 131072.0);
 		double randbusyrate = busyrate * 0.8;
 		double normbusyrate = busyrate * 0.2;
 		double prerate = (1 - busyrate) * 0.1;
-		double eta = exp(-ind / 131072.0) * 0.1;
+		double eta = exp(-ind / 262144.0) * 0.1;
 		eta = max(0.01, eta);
 		busyrate = max(0.01, busyrate);
 

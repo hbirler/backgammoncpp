@@ -19,7 +19,17 @@ const double PI = 3.14159265358979323846;
 #define _INSIZE
 const int INSIZE = 198;
 #endif
-const int HIDSIZE = 50;
+const int HIDSIZE = 80;
+
+inline double sigmoid(double z)
+{
+	return 1.0 / (1.0 + exp(-z));
+}
+
+inline double sigmoid_prime(double z)
+{
+	return sigmoid(z)*(1 - sigmoid(z));
+}
 
 
 
