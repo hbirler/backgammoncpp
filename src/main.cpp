@@ -229,6 +229,7 @@ void run_learning()
 	cout << std::fixed << std::setprecision(2);
 
 	network prent = loadnet();
+	random_evaluator randm;
 
 	clock_t begin = clock();
 	for (ind; ; ind += 2)
@@ -262,13 +263,13 @@ void run_learning()
 				prent = loadnet(nind);
 
 			cout << "\tTesting network against prent..." << endl;
-			auto tprent = tester.test_network(net, 100, 100, ind, false, "prent");
+			auto tprent = tester.test_network(net, 100, 100, ind, prent, "prent");
 			cout << "\tTesting network against buzir..." << endl;
-			auto tbuzir = tester.test_network(net, 100, 100, ind, true, "buzir");
+			auto tbuzir = tester.test_network(net, 100, 100, ind, buzir, "buzir");
 			cout << "\tTesting network against buzin..." << endl;
-			auto tbuzin = tester.test_network(net, 100, 100, ind, true, "buzin");
+			auto tbuzin = tester.test_network(net, 100, 100, ind, buzin, "buzin");
 			cout << "\tTesting network against randm..." << endl;
-			auto trandm = tester.test_network(net, 100, 100, ind, false, "randm");
+			auto trandm = tester.test_network(net, 100, 100, ind, randm, "randm");
 
 			map<string, double> data = { {"ind",ind}, {"eta",eta}, {"pre_ind",nind},
 			{"train_rate_buzi", busyrate }, { "train_rate_buzi_rand", randbusyrate }, { "train_rate_buzi_norm", normbusyrate }, { "train_rate_pre",prerate },
