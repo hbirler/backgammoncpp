@@ -64,7 +64,7 @@ function getData(){
 	client.send();
 }
 
-function MovingAverage (data, size, weights)
+function MovingAverage (data, weights)
 {
 	var points = weights.length;
     var filter = [];
@@ -76,7 +76,7 @@ function MovingAverage (data, size, weights)
         for (var j = -points/2; j < points/2; j++)
             mean += data[i + j] * weights[j+points/2];
   
-        filter.push(mean / size);
+        filter.push(mean);
     }
     return filter;
 }
@@ -84,7 +84,7 @@ function MovingAverage (data, size, weights)
 function processData(cdata){
 	for (var ind in cdata) {
 		var ys = cdata[ind].y;
-		cdata[ind].y = MovingAverage(ys,4, [1/8,1/4,1/4,1/4,1/8]);
+		cdata[ind].y = MovingAverage(ys, [1/8,1/4,1/4,1/4,1/8]);
 	}
 	return cdata;
 }
