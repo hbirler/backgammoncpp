@@ -238,6 +238,8 @@ void run_learning()
 		double normbusyrate = busyrate * 0.2;
 		double prerate = (1 - busyrate) * 0.1;
 		double eta = exp(-ind / 131072.0) * 0.1;
+		eta = max(0.01, eta);
+		busyrate = max(0.01, busyrate);
 
 		net.set_eta(eta);
 		net.no = ind;
