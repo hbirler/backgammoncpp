@@ -23,7 +23,7 @@ function getData(){
 	
 	
 	var client = new XMLHttpRequest();
-	client.open('GET', '/logdata');
+	client.open('GET', 'http://hproc.cloudapp.net/logdata');
 	client.onreadystatechange = function() {
 		data = [];
 		cdata = [];
@@ -84,7 +84,7 @@ function MovingAverage (data, weights)
 function processData(cdata){
 	for (var ind in cdata) {
 		var ys = cdata[ind].y;
-		cdata[ind].y = MovingAverage(ys, [1/8,1/4,1/4,1/4,1/8]);
+		cdata[ind].y = MovingAverage(ys, [1/16,1/16,1/8,1/8,1/4,1/8,1/8,1/16,1/16]);
 	}
 	return cdata;
 }
