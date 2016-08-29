@@ -107,6 +107,7 @@ double network::evaluate(const double input[INSIZE]) const
 	static double hidden[HIDSIZE] = { 0.0 };
 	double output = 0.0;
 
+	#pragma omp parallel for
 	for (int i = 0; i < HIDSIZE; i++)
 	{
 		double mval = 0.0;
@@ -162,7 +163,7 @@ void network::update(const double input[INSIZE], double output)
     double nabla_w0[INSIZE][HIDSIZE];
     double nabla_w1[HIDSIZE];
     
-    backprop(input, nabla_b0, &nabla_b1, nabla_w0, nabla_w1);
+	double prediction = backprop(input, nabla_b0, &nabla_b1, nabla_w0, nabla_w1);
     
     //printf("%lf\n",nabla_b0[0]);
     
@@ -181,7 +182,7 @@ void network::update(const double input[INSIZE], double output)
     
     //done decay
     
-    double prediction = this->evaluate(input);
+    //double prediction = this->evaluate(input);
     double gamma = -(output - prediction);
     
     biases1 = biases1 - eta * gamma * e_b1;
@@ -197,7 +198,7 @@ void network::update(const double input[INSIZE], double output)
      }
     
 }
-void network::backprop(const double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE])
+double network::backprop(const double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE])
 {
     //printf("%d\n",nono);
     
@@ -230,6 +231,7 @@ void network::backprop(const double input[INSIZE], double nabla_b0[HIDSIZE], dou
      {
          nabla_w0[k][j] = input[k] * hiderror[j];
      }
+	return output;
 }
 
 

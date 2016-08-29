@@ -20,7 +20,7 @@ SOURCES := $(wildcard $(SRCDIR)/*.$(SRCEXT))
 HEADERS := $(wildcard $(INCDIR)/*.$(INCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 EMOBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.bc))
-CFLAGS := -std=c++11 -g -O2 # -Wall
+CFLAGS := -std=c++11 -g -O2 -fopenmp # -Wall
 EMCFLAGS := -std=c++11 -O2
 LIB := # 
 INC := -I include
@@ -36,9 +36,9 @@ emscripten: override TARGET := bin/tavla.htm
 emscripten: override OBJECTS := $(EMOBJECTS)
 emscripten: $(EMTARGET)
 	
-$(EMTARGET): $(EMOBJECTS)
-	@echo " Linking..."
-	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+#$(EMTARGET): $(EMOBJECTS)
+#	@echo " Linking..."
+#	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.bc: $(SRCDIR)/%.$(SRCEXT) $(HEADERS)
 	@mkdir -p $(BUILDDIR)
@@ -48,7 +48,7 @@ $(BUILDDIR)/%.bc: $(SRCDIR)/%.$(SRCEXT) $(HEADERS)
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
-	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+	@echo " $(CC) $^ -fopenmp -o $(TARGET) $(LIB)"; $(CC) $^ -fopenmp -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT) $(HEADERS)
 	@mkdir -p $(BUILDDIR)

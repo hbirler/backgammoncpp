@@ -76,7 +76,7 @@ public:
 	int no;
 	bool operator==(const network& other) const ;
 private:
-	void backprop(const double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE]);
+	double backprop(const double input[INSIZE], double nabla_b0[HIDSIZE], double* nabla_b1, double nabla_w0[INSIZE][HIDSIZE], double nabla_w1[HIDSIZE]);
 	double biases0[HIDSIZE];
 	double biases1;
 	double weights0[INSIZE][HIDSIZE];

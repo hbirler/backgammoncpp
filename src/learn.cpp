@@ -21,9 +21,9 @@ tavla choose_next(tavla tav, const evaluatorbase& net, int d1, int d2)
     std::vector<tavla> vec;
     tav.next_states(d1, d2, vec);
 
-	std::string mystr = "";
-	for (auto& t : vec)
-		mystr += t.str() + "\n";
+	//std::string mystr = "";
+	//for (auto& t : vec)
+	//	mystr += t.str() + "\n";
     
     int bestind = 0;
     double maxval =-1.0;
