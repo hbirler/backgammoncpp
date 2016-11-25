@@ -4,6 +4,8 @@ sudo: required
 
 dist: precise
 
+script: make && make test
+
 matrix:
   include:
     - env: CXX=g++-5 CC=gcc-5
