@@ -1,6 +1,6 @@
 # TODO: 
 #
-CC := g++ # This is the main compiler
+CC := g++-5 # This is the main compiler
 EMCC := emcc
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR := src
