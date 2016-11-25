@@ -6,22 +6,16 @@ dist: precise
 
 matrix:
   include:
-    - compiler: gcc
+    - env: CXX=g++-5 CC=gcc-5
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-      env: COMPILER=g++-4.9
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=g++-5
+          sources: &sources
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise
+            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-precise-3.6
 
 before_install:
   - sudo apt-get update -qq
