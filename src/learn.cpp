@@ -28,7 +28,7 @@ tavla choose_next(tavla tav, const evaluatorbase& net, int d1, int d2)
     int bestind = 0;
     double maxval =-1.0;
 
-    
+
     for (int i = 0; i < vec.size(); i++)
     {
         double nval = evaluate(vec[i], net, tav.turn);
@@ -38,7 +38,6 @@ tavla choose_next(tavla tav, const evaluatorbase& net, int d1, int d2)
             maxval = nval;
         }
     }
-    
     return vec[bestind];
 }
 

@@ -107,7 +107,6 @@ double network::evaluate(const double input[INSIZE]) const
 	static double hidden[HIDSIZE] = { 0.0 };
 	double output = 0.0;
 
-	#pragma omp parallel for
 	for (int i = 0; i < HIDSIZE; i++)
 	{
 		double mval = 0.0;
