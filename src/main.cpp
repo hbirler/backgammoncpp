@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 		else if (strcmp(argv[1], "play") == 0)
 			return play(argc - 2, argv + 2);
 	}
-
+	//main_test();
 	//run_tests();
 	//run_businessman();
 	run_learning();

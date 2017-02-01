@@ -6,9 +6,9 @@
 #include <fstream>
 #include <functional>
 #include <cstring>
+#include <immintrin.h>
 #include "globals.h"
 #include "myrandom.h"
-
 
 
 double randn();
@@ -92,3 +92,36 @@ private:
 double sigmoid_prime(double z);
 double sigmoid(double z);
 double randn();
+
+
+struct double4 {
+	__m256d xmm;
+	double4() {};
+	double4(__m256d const & x) { xmm = x; }
+	double4 & operator = (__m256d const & x) { xmm = x; return *this; }
+	double4 & load(double const * p) { xmm = _mm256_loadu_pd(p); return *this; }
+	operator __m256d() const { return xmm; }
+};
+
+static inline double4 operator + (double4 const & a, double4 const & b) {
+	return _mm256_add_pd(a, b);
+}
+static inline double4 operator * (double4 const & a, double4 const & b) {
+	return _mm256_mul_pd(a, b);
+}
+
+struct block3 {
+	double4 x, y, z;
+};
+
+struct block4 {
+	double4 x, y, z, w;
+};
+
+static inline double4 dot(block3 const & a, block3 const & b) {
+	return a.x*b.x + a.y*b.y + a.z*b.z;
+}
+
+static inline double4 dot(block4 const & a, block4 const & b) {
+	return a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w;
+}

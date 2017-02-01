@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <iomanip>
 #include "myrandom.h"
+#include "globals.h"
 
 
 #ifndef _INSIZE

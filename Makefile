@@ -1,6 +1,11 @@
 # TODO: 
 #
-CC := g++-5 # This is the main compiler
+ifndef TRAVIS
+    CC := g++
+endif
+ifdef TRAVIS
+    CC := g++-5
+endif
 EMCC := emcc
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR := src
@@ -20,7 +25,8 @@ SOURCES := $(wildcard $(SRCDIR)/*.$(SRCEXT))
 HEADERS := $(wildcard $(INCDIR)/*.$(INCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 EMOBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.bc))
-CFLAGS := -std=c++11 -g -O2 -fopenmp # -Wall
+CFLAGS := -std=c++11 -mavx -g -Ofast # -Wall
+CLFLAGS := 
 EMCFLAGS := -std=c++11 -O2
 LIB := # 
 INC := -I include
@@ -48,7 +54,7 @@ $(BUILDDIR)/%.bc: $(SRCDIR)/%.$(SRCEXT) $(HEADERS)
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
-	@echo " $(CC) $^ -fopenmp -o $(TARGET) $(LIB)"; $(CC) $^ -fopenmp -o $(TARGET) $(LIB)
+	@echo " $(CC) $^ -o $(TARGET) $(CLFLAGS) $(LIB)"; $(CC) $^ -o $(TARGET) $(CLFLAGS) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT) $(HEADERS)
 	@mkdir -p $(BUILDDIR)

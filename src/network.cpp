@@ -102,12 +102,16 @@ void network::export_weights(double ws[INSIZE + 3][HIDSIZE])
 	}
 	ws[INSIZE + 2][0] = biases1;
 }
-double network::evaluate(const double input[INSIZE]) const
-{
-	static double hidden[HIDSIZE] = { 0.0 };
-	double output = 0.0;
 
-	for (int i = 0; i < HIDSIZE; i++)
+inline double network::evaluate(const double input[INSIZE]) const
+{
+	//static double hidden[HIDSIZE] = { 0.0 };
+	static double hidz[HIDSIZE] = { 0.0 };
+	double outz = 0.0;
+
+
+
+	/*for (int i = 0; i < HIDSIZE; i++)
 	{
 		double mval = 0.0;
 		for (int k = 0; k < INSIZE; k++)
@@ -122,35 +126,38 @@ double network::evaluate(const double input[INSIZE]) const
 			mval += hidden[k] * weights1[k];
 		mval += biases1;
 		output = sigmoid(mval);
-	}
+	}*/
 
 
-	return output;
+	return evaluate(input, hidz, &outz);
 }
+
+
 double network::evaluate(const double input[INSIZE], double hidz[HIDSIZE], double* outz) const
 {
     static double hidden[HIDSIZE] = {0.0};
     double output = 0.0;
+
+	for (int i = 0; i < HIDSIZE; i++)
+	{
+		hidz[i] = 0.0;
+	}
+	for (int k = 0; k < INSIZE; k++)
+		for (int i = 0; i < HIDSIZE; i++)
+			hidz[i] += input[k] * weights0[k][i];
+	for (int i = 0; i < HIDSIZE; i++)
+	{
+		hidz[i] += biases0[i];
+		hidden[i] = sigmoid(hidz[i]);
+	}
     
-    for (int i = 0; i < HIDSIZE; i++)
     {
-        double mval = 0.0;
-        for (int k = 0; k < INSIZE; k++)
-            mval += input[k] * weights0[k][i];
-        mval += biases0[i];
-        hidz[i] = mval;
-        hidden[i] = sigmoid(mval);
-    }
-    
-    {
-        double mval = 0.0;
+		*outz = 0.0;
         for (int k = 0; k < HIDSIZE; k++)
-            mval += hidden[k] * weights1[k];
-        mval +=  biases1;
-        *outz = mval;
-        output = sigmoid(mval);
+			*outz += hidden[k] * weights1[k];
+		*outz +=  biases1;
+        output = sigmoid(*outz);
     }
-    
     
     return output;
 }
