@@ -232,6 +232,7 @@ void run_learning()
 	random_evaluator randm;
 
 	clock_t begin = clock();
+	clock_t last = clock();
 	for (ind; ; ind += 2)
 	{
 		double busyrate = exp(-ind / 131072.0);
@@ -253,9 +254,13 @@ void run_learning()
 			cout << "*" << randbusylearn << " " << normbusylearn << " " << prelearn << " " << selflearn << endl;
 			cout << "#" << busyrate << " " << randbusyrate << " " << normbusyrate << " " << prerate << " " << eta << endl;
 		}
-
+		
 		if (ind % 1000 == 0)
 		{
+			clock_t cur_clock = clock();
+			double secs_since_last = (double)(cur_clock - last) / CLOCKS_PER_SEC;
+			last = cur_clock;
+			
 			buzinessman buzir(true);
 			buzinessman buzin(false);
 			int nind = ind / 4 * 3 / 1000 * 1000;
@@ -271,7 +276,7 @@ void run_learning()
 			cout << "\tTesting network against randm..." << endl;
 			auto trandm = tester.test_network(net, 25, 25, ind, randm, "randm");
 
-			map<string, double> data = { {"ind",ind}, {"eta",eta}, {"pre_ind",nind},
+			map<string, double> data = { {"ind",ind}, {"eta",eta}, {"pre_ind",nind}, {"delta_secs", secs_since_last},
 			{"train_rate_buzi", busyrate }, { "train_rate_buzi_rand", randbusyrate }, { "train_rate_buzi_norm", normbusyrate }, { "train_rate_pre",prerate },
 			{ "train_rate_self", 1-(busyrate + prerate) },
 			{ "test_pre_avg", tprent.avg },{ "test_pre_white",tprent.white },{ "test_pre_black",tprent.black },
